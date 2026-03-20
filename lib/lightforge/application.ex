@@ -12,6 +12,7 @@ defmodule Lightforge.Application do
       Lightforge.Repo,
       {DNSCluster, query: Application.get_env(:lightforge, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Lightforge.PubSub},
+      Lightforge.BattleNet.TokenStore,
       # Start a worker by calling: Lightforge.Worker.start_link(arg)
       # {Lightforge.Worker, arg},
       # Start to serve requests, typically the last entry

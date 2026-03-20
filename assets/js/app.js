@@ -25,11 +25,101 @@ import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/lightforge"
 import topbar from "../vendor/topbar"
 
+const hooks = {
+  ItemTooltip: {
+    mounted() {
+      this.tooltip = document.getElementById("item-tooltip")
+
+      if (!this.tooltip) return
+
+      this.onEnter = (event) => {
+        this.tooltip.innerHTML = `
+          <p class="forge-tooltip-title">${this.el.dataset.tooltipTitle || ""}</p>
+          <p class="forge-tooltip-body">${this.el.dataset.tooltipBody || ""}</p>
+        `
+        this.tooltip.dataset.visible = "true"
+        this.position(event)
+      }
+
+      this.onMove = (event) => this.position(event)
+      this.onLeave = () => delete this.tooltip.dataset.visible
+
+      this.el.addEventListener("mouseenter", this.onEnter)
+      this.el.addEventListener("mousemove", this.onMove)
+      this.el.addEventListener("mouseleave", this.onLeave)
+      this.el.addEventListener("focusin", this.onEnter)
+      this.el.addEventListener("focusout", this.onLeave)
+    },
+
+    destroyed() {
+      this.el.removeEventListener("mouseenter", this.onEnter)
+      this.el.removeEventListener("mousemove", this.onMove)
+      this.el.removeEventListener("mouseleave", this.onLeave)
+      this.el.removeEventListener("focusin", this.onEnter)
+      this.el.removeEventListener("focusout", this.onLeave)
+    },
+
+    position(event) {
+      if (!this.tooltip) return
+
+      const x = Math.min(event.clientX + 18, window.innerWidth - this.tooltip.offsetWidth - 16)
+      const y = Math.min(event.clientY + 18, window.innerHeight - this.tooltip.offsetHeight - 16)
+
+      this.tooltip.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    },
+  },
+
+  MediaReveal: {
+    mounted() {
+      this.markReady = () => this.el.dataset.ready = "true"
+      this.bindEvents()
+      this.syncReadyState()
+    },
+
+    updated() {
+      this.syncReadyState()
+    },
+
+    reconnected() {
+      this.syncReadyState()
+    },
+
+    destroyed() {
+      this.unbindEvents()
+    },
+
+    bindEvents() {
+      this.unbindEvents()
+      this.onLoad = () => this.markReady()
+      this.onError = () => this.markReady()
+
+      this.el.addEventListener("load", this.onLoad)
+      this.el.addEventListener("error", this.onError)
+    },
+
+    unbindEvents() {
+      if (this.onLoad) {
+        this.el.removeEventListener("load", this.onLoad)
+      }
+
+      if (this.onError) {
+        this.el.removeEventListener("error", this.onError)
+      }
+    },
+
+    syncReadyState() {
+      if (this.el.complete) {
+        this.markReady()
+      }
+    },
+  },
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: {...hooks, ...colocatedHooks},
 })
 
 // Show progress bar on live navigation and form submits
@@ -80,4 +170,3 @@ if (process.env.NODE_ENV === "development") {
     window.liveReloader = reloader
   })
 }
-

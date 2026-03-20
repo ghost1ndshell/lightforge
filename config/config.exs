@@ -31,6 +31,12 @@ config :lightforge, LightforgeWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :lightforge, Lightforge.Mailer, adapter: Swoosh.Adapters.Local
 
+config :lightforge, Lightforge.BattleNet.Config,
+  api_host_template: "https://%{region}.api.blizzard.com",
+  oauth_base_url: "https://oauth.battle.net",
+  scope: "wow.profile",
+  user_agent: "lightforge"
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",

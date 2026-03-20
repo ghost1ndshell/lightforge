@@ -17,7 +17,11 @@ defmodule LightforgeWeb.Router do
   scope "/", LightforgeWeb do
     pipe_through :browser
 
+    get "/auth/bnet", BattleNetAuthController, :request
+    get "/auth/bnet/callback", BattleNetAuthController, :callback
+    delete "/auth/logout", BattleNetAuthController, :logout
     get "/", PageController, :home
+    live "/character", CharacterLive, :index
   end
 
   # Other scopes may use custom stacks.

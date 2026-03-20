@@ -31,44 +31,98 @@ defmodule LightforgeWeb.Layouts do
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
 
+  attr :battle_net_connected, :boolean, default: false
+  attr :character_selector_enabled, :boolean, default: false
+  attr :character_selector_open, :boolean, default: false
+  attr :current_character_label, :string, default: nil
+
   slot :inner_block, required: true
 
   def app(assigns) do
     ~H"""
-    <header class="navbar px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-        </a>
-      </div>
-      <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
+    <div class="min-h-screen bg-[linear-gradient(180deg,#fffaf2_0%,#f5efe5_24%,#efe8dc_100%)] text-stone-900">
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.2),transparent_42%),radial-gradient(circle_at_18%_24%,rgba(251,191,36,0.18),transparent_28%),radial-gradient(circle_at_88%_18%,rgba(120,53,15,0.12),transparent_24%)]" />
+
+      <header class="relative z-10 px-4 pt-4 sm:px-6 lg:px-8">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-full border border-white/70 bg-white/75 px-5 py-3 shadow-[0_16px_48px_rgba(28,25,23,0.08)] backdrop-blur">
+          <a href={~p"/"} class="flex items-center gap-3">
+            <div class="flex size-10 items-center justify-center rounded-full bg-stone-950 text-amber-300">
+              <.icon name="hero-fire" class="size-5" />
+            </div>
+            <div>
+              <p class="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-stone-500">
+                Lightforge
+              </p>
+              <p class="text-sm font-semibold text-stone-950">Workbench</p>
+            </div>
+          </a>
+
+          <div class="hidden items-center gap-2 lg:flex">
+            <.link navigate={~p"/"} class="forge-nav-link">
+              Home
+            </.link>
+            <.link navigate={~p"/character"} class="forge-nav-link">
+              Character
+            </.link>
+            <button
+              :if={@character_selector_enabled}
+              type="button"
+              phx-click="open_selector"
+              class={[
+                "forge-nav-link inline-flex items-center gap-2 border border-transparent bg-transparent",
+                @character_selector_open && "border-stone-300 bg-white/80 text-stone-950"
+              ]}
+            >
+              <.icon name="hero-adjustments-horizontal" class="size-4" /> Character Selector
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div
+              :if={@current_character_label}
+              class="hidden rounded-full border border-stone-200 bg-stone-50 px-3 py-2 text-xs font-medium text-stone-600 xl:block"
+            >
+              {@current_character_label}
+            </div>
+
+            <span class={[
+              "hidden rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em] sm:inline-flex",
+              @battle_net_connected && "bg-emerald-100 text-emerald-700",
+              not @battle_net_connected && "bg-stone-200 text-stone-500"
+            ]}>
+              {if @battle_net_connected, do: "Connected", else: "Offline"}
+            </span>
+
             <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </header>
 
-    <main class="px-4 py-20 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl space-y-4">
-        {render_slot(@inner_block)}
-      </div>
-    </main>
+            <%= if @battle_net_connected do %>
+              <.link
+                href={~p"/auth/logout"}
+                method="delete"
+                class="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-900 transition hover:border-stone-950"
+              >
+                Disconnect
+              </.link>
+            <% else %>
+              <.link
+                href={~p"/auth/bnet"}
+                class="inline-flex items-center justify-center rounded-full bg-stone-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-stone-800"
+              >
+                Connect
+              </.link>
+            <% end %>
+          </div>
+        </div>
+      </header>
 
-    <.flash_group flash={@flash} />
+      <main class="relative z-10 px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+          {render_slot(@inner_block)}
+        </div>
+      </main>
+
+      <.flash_group flash={@flash} />
+    </div>
     """
   end
 

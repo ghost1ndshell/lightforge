@@ -14,7 +14,7 @@
    curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
    Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
 @plugin "../vendor/daisyui" {
-  themes: false;
+    themes: false;
 }
 
 /* daisyUI theme plugin. You can update this file by fetching the latest version with:
@@ -22,73 +22,73 @@
   We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
   on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
 @plugin "../vendor/daisyui-theme" {
-  name: "dark";
-  default: false;
-  prefersdark: true;
-  color-scheme: "dark";
-  --color-base-100: oklch(30.33% 0.016 252.42);
-  --color-base-200: oklch(25.26% 0.014 253.1);
-  --color-base-300: oklch(20.15% 0.012 254.09);
-  --color-base-content: oklch(97.807% 0.029 256.847);
-  --color-primary: oklch(58% 0.233 277.117);
-  --color-primary-content: oklch(96% 0.018 272.314);
-  --color-secondary: oklch(58% 0.233 277.117);
-  --color-secondary-content: oklch(96% 0.018 272.314);
-  --color-accent: oklch(60% 0.25 292.717);
-  --color-accent-content: oklch(96% 0.016 293.756);
-  --color-neutral: oklch(37% 0.044 257.287);
-  --color-neutral-content: oklch(98% 0.003 247.858);
-  --color-info: oklch(58% 0.158 241.966);
-  --color-info-content: oklch(97% 0.013 236.62);
-  --color-success: oklch(60% 0.118 184.704);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(58% 0.253 17.585);
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 0;
+    name: "dark";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+    --color-base-100: oklch(30.33% 0.016 252.42);
+    --color-base-200: oklch(25.26% 0.014 253.1);
+    --color-base-300: oklch(20.15% 0.012 254.09);
+    --color-base-content: oklch(97.807% 0.029 256.847);
+    --color-primary: oklch(58% 0.233 277.117);
+    --color-primary-content: oklch(96% 0.018 272.314);
+    --color-secondary: oklch(58% 0.233 277.117);
+    --color-secondary-content: oklch(96% 0.018 272.314);
+    --color-accent: oklch(60% 0.25 292.717);
+    --color-accent-content: oklch(96% 0.016 293.756);
+    --color-neutral: oklch(37% 0.044 257.287);
+    --color-neutral-content: oklch(98% 0.003 247.858);
+    --color-info: oklch(58% 0.158 241.966);
+    --color-info-content: oklch(97% 0.013 236.62);
+    --color-success: oklch(60% 0.118 184.704);
+    --color-success-content: oklch(98% 0.014 180.72);
+    --color-warning: oklch(66% 0.179 58.318);
+    --color-warning-content: oklch(98% 0.022 95.277);
+    --color-error: oklch(58% 0.253 17.585);
+    --color-error-content: oklch(96% 0.015 12.422);
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.21875rem;
+    --size-field: 0.21875rem;
+    --border: 1.5px;
+    --depth: 1;
+    --noise: 0;
 }
 
 @plugin "../vendor/daisyui-theme" {
-  name: "light";
-  default: true;
-  prefersdark: false;
-  color-scheme: "light";
-  --color-base-100: oklch(98% 0 0);
-  --color-base-200: oklch(96% 0.001 286.375);
-  --color-base-300: oklch(92% 0.004 286.32);
-  --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(70% 0.213 47.604);
-  --color-primary-content: oklch(98% 0.016 73.684);
-  --color-secondary: oklch(55% 0.027 264.364);
-  --color-secondary-content: oklch(98% 0.002 247.839);
-  --color-accent: oklch(0% 0 0);
-  --color-accent-content: oklch(100% 0 0);
-  --color-neutral: oklch(44% 0.017 285.786);
-  --color-neutral-content: oklch(98% 0 0);
-  --color-info: oklch(62% 0.214 259.815);
-  --color-info-content: oklch(97% 0.014 254.604);
-  --color-success: oklch(70% 0.14 182.503);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(58% 0.253 17.585);
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 0;
+    name: "light";
+    default: true;
+    prefersdark: false;
+    color-scheme: "light";
+    --color-base-100: oklch(98% 0 0);
+    --color-base-200: oklch(96% 0.001 286.375);
+    --color-base-300: oklch(92% 0.004 286.32);
+    --color-base-content: oklch(21% 0.006 285.885);
+    --color-primary: oklch(70% 0.213 47.604);
+    --color-primary-content: oklch(98% 0.016 73.684);
+    --color-secondary: oklch(55% 0.027 264.364);
+    --color-secondary-content: oklch(98% 0.002 247.839);
+    --color-accent: oklch(0% 0 0);
+    --color-accent-content: oklch(100% 0 0);
+    --color-neutral: oklch(44% 0.017 285.786);
+    --color-neutral-content: oklch(98% 0 0);
+    --color-info: oklch(62% 0.214 259.815);
+    --color-info-content: oklch(97% 0.014 254.604);
+    --color-success: oklch(70% 0.14 182.503);
+    --color-success-content: oklch(98% 0.014 180.72);
+    --color-warning: oklch(66% 0.179 58.318);
+    --color-warning-content: oklch(98% 0.022 95.277);
+    --color-error: oklch(58% 0.253 17.585);
+    --color-error-content: oklch(96% 0.015 12.422);
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.21875rem;
+    --size-field: 0.21875rem;
+    --border: 1.5px;
+    --depth: 1;
+    --noise: 0;
 }
 
 /* Add variants based on LiveView classes */
@@ -100,6 +100,948 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
+[data-phx-session],
+[data-phx-teleported-src] {
+    display: contents;
+}
 
 /* This file is for your main application CSS */
+
+body {
+    font-family:
+        "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino,
+        Georgia, serif;
+}
+
+.forge-shell {
+    position: relative;
+}
+
+.forge-character-page {
+    position: relative;
+    isolation: isolate;
+    padding: 0.5rem;
+}
+
+.forge-character-page::before {
+    content: "";
+    position: absolute;
+    inset: -1rem -0.5rem auto;
+    min-height: 20rem;
+    border-radius: 2.25rem;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(245, 158, 11, 0.22),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 82% 18%,
+            rgba(120, 53, 15, 0.18),
+            transparent 26%
+        ),
+        linear-gradient(180deg, rgba(120, 53, 15, 0.08), rgba(250, 245, 232, 0));
+    opacity: 0.95;
+    pointer-events: none;
+    z-index: -2;
+}
+
+.forge-character-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2rem;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 251, 235, 0.46),
+            rgba(255, 248, 235, 0.18)
+        ),
+        radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.24),
+            transparent 58%
+        );
+    box-shadow: inset 0 1px 0 rgba(255, 251, 235, 0.64);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.forge-hero {
+    position: relative;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(251, 191, 36, 0.22),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(245, 158, 11, 0.18),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(255, 251, 235, 0.94),
+            rgba(255, 247, 237, 0.82) 55%,
+            rgba(245, 239, 229, 0.98)
+        );
+}
+
+.forge-panel {
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 8%, white);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.86),
+        rgba(255, 251, 235, 0.72)
+    );
+    box-shadow: 0 18px 48px rgba(28, 25, 23, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+.forge-character-page .forge-panel {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(120, 53, 15, 0.18);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 252, 245, 0.96),
+            rgba(247, 238, 220, 0.9)
+        ),
+        linear-gradient(
+            135deg,
+            rgba(250, 245, 232, 0.74),
+            rgba(255, 252, 245, 0.3)
+        );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 250, 240, 0.9),
+        0 22px 52px rgba(41, 30, 21, 0.12),
+        0 3px 10px rgba(120, 53, 15, 0.08);
+    backdrop-filter: blur(12px);
+}
+
+.forge-character-page .forge-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 250, 240, 0.34),
+            transparent 20% 80%,
+            rgba(120, 53, 15, 0.04)
+        ),
+        radial-gradient(
+            circle at top right,
+            rgba(217, 119, 6, 0.08),
+            transparent 26%
+        );
+    pointer-events: none;
+}
+
+.forge-character-page .forge-panel > * {
+    position: relative;
+}
+
+.forge-source-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgba(120, 53, 15, 0.18);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 249, 235, 0.96),
+        rgba(244, 232, 208, 0.92)
+    );
+    padding: 0.55rem 0.9rem;
+    color: rgb(120 53 15);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.9);
+    transition:
+        border-color 160ms ease,
+        color 160ms ease,
+        background-color 160ms ease;
+}
+
+a.forge-source-pill:hover {
+    border-color: rgba(146, 64, 14, 0.34);
+    color: rgb(120 53 15);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 252, 244, 0.98),
+        rgba(247, 235, 212, 0.94)
+    );
+}
+
+.forge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(120, 53, 15, 0.14);
+    background: rgba(255, 251, 235, 0.8);
+    padding: 0.65rem 0.9rem;
+}
+
+.forge-nav-link {
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgb(68 64 60);
+    transition:
+        color 160ms ease,
+        background-color 160ms ease;
+}
+
+.forge-nav-link:hover {
+    background: rgba(28, 25, 23, 0.06);
+    color: rgb(12 10 9);
+}
+
+.forge-input,
+.forge-select {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgb(214 211 209);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    color: rgb(28 25 23);
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+.forge-input:focus,
+.forge-select:focus {
+    border-color: rgb(217 119 6);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.22);
+    outline: none;
+}
+
+.forge-character-page .forge-select,
+.forge-character-page .forge-input {
+    border-color: rgba(120, 53, 15, 0.16);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 251, 235, 0.98),
+        rgba(247, 239, 226, 0.94)
+    );
+    color: rgb(41 30 21);
+    box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.88);
+}
+
+.forge-character-page .forge-select:focus,
+.forge-character-page .forge-input:focus {
+    border-color: rgba(180, 83, 9, 0.62);
+    background: rgb(255 252 244);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.95),
+        0 0 0 4px rgba(245, 158, 11, 0.16);
+}
+
+.forge-stat-card {
+    display: flex;
+    min-height: 5.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 1.25rem;
+    border: 1px solid rgb(231 229 228);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 1rem;
+}
+
+.forge-character-page .forge-stat-card,
+.forge-character-page .forge-row-card,
+.forge-character-page .forge-suggestion-card,
+.forge-character-page .forge-stat-goal-row {
+    border-color: rgba(120, 53, 15, 0.16);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 251, 241, 0.92),
+        rgba(245, 236, 220, 0.84)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.88),
+        0 10px 22px rgba(41, 30, 21, 0.06);
+}
+
+.forge-progression-row {
+    display: grid;
+    gap: 0.9rem;
+    border-radius: 1.2rem;
+    border: 1px solid rgba(120, 53, 15, 0.16);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 251, 241, 0.92),
+        rgba(245, 236, 220, 0.84)
+    );
+    padding: 1rem 1.1rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.88),
+        0 10px 22px rgba(41, 30, 21, 0.06);
+}
+
+.forge-progression-rail {
+    padding-block: 1rem;
+}
+
+.forge-progression-rail-inner {
+    display: grid;
+    gap: 1rem;
+}
+
+.forge-progression-rail-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.forge-progression-rail-tracks {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.forge-progression-rail-track {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.forge-progression-track-label {
+    color: rgb(41 30 21);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.forge-progression-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+    scrollbar-width: none;
+}
+
+.forge-progression-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.forge-progression-badge {
+    display: grid;
+    flex: 0 0 4.9rem;
+    min-height: 3.35rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: center;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(120, 113, 108, 0.2);
+    padding: 0.35rem 0.38rem 0.45rem;
+    text-align: center;
+}
+
+.forge-progression-badge-label {
+    color: rgb(120 113 108);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+}
+
+.forge-progression-badge-value {
+    color: rgb(41 30 21);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.forge-progression-badge-high {
+    border-color: rgba(180, 83, 9, 0.24);
+    background: linear-gradient(
+        180deg,
+        rgba(251, 191, 36, 0.24),
+        rgba(217, 119, 6, 0.2)
+    );
+    box-shadow: inset 0 1px 0 rgba(255, 251, 235, 0.82);
+}
+
+.forge-progression-badge-high .forge-progression-badge-label,
+.forge-progression-badge-high .forge-progression-badge-value {
+    color: rgb(120 53 15);
+}
+
+.forge-progression-badge-active {
+    border-color: rgba(29, 78, 216, 0.22);
+    background: linear-gradient(
+        180deg,
+        rgba(147, 197, 253, 0.24),
+        rgba(96, 165, 250, 0.2)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(239, 246, 255, 0.9),
+        0 0 0 2px rgba(59, 130, 246, 0.08);
+}
+
+.forge-progression-badge-active .forge-progression-badge-label,
+.forge-progression-badge-active .forge-progression-badge-value {
+    color: rgb(30 64 175);
+}
+
+.forge-progression-badge-pending {
+    background: linear-gradient(
+        180deg,
+        rgba(250, 245, 232, 0.95),
+        rgba(240, 232, 216, 0.84)
+    );
+}
+
+.forge-stat-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(120 113 108);
+}
+
+.forge-stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(28 25 23);
+}
+
+.forge-avatar-shell {
+    display: flex;
+    height: 5.5rem;
+    width: 5.5rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 1.4rem;
+    border: 1px solid rgb(231 229 228);
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(251, 191, 36, 0.12),
+            transparent 55%
+        ),
+        rgba(255, 255, 255, 0.78);
+}
+
+.forge-character-page .forge-avatar-shell {
+    border-color: rgba(120, 53, 15, 0.18);
+    background:
+        radial-gradient(
+            circle at 50% 16%,
+            rgba(245, 158, 11, 0.18),
+            transparent 46%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(255, 249, 235, 0.94),
+            rgba(230, 214, 186, 0.86)
+        );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.9),
+        0 10px 18px rgba(41, 30, 21, 0.08);
+}
+
+.forge-avatar {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 220ms ease;
+}
+
+.forge-avatar[data-ready="true"] {
+    opacity: 1;
+}
+
+.forge-avatar-fallback {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.forge-row-card {
+    display: flex;
+    min-height: 4.6rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 1.2rem;
+    border: 1px solid rgb(231 229 228);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 1rem 1.1rem;
+}
+
+.forge-row-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(120 113 108);
+}
+
+.forge-row-value {
+    text-align: right;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgb(28 25 23);
+}
+
+.forge-suggestion-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    border-radius: 1.2rem;
+    border: 1px solid rgb(231 229 228);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 1rem 1.1rem;
+}
+
+.forge-suggestion-index {
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(245 158 11 / 0.14);
+    color: rgb(180 83 9);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.forge-character-page .forge-suggestion-index,
+.forge-character-page .forge-target-rank {
+    background: linear-gradient(
+        180deg,
+        rgba(251, 191, 36, 0.2),
+        rgba(217, 119, 6, 0.18)
+    );
+    color: rgb(120 53 15);
+    box-shadow: inset 0 1px 0 rgba(255, 251, 235, 0.82);
+}
+
+.forge-priority-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    border-radius: 1.2rem;
+    border: 1px solid rgb(231 229 228);
+    background: rgba(255, 255, 255, 0.78);
+    padding: 1rem 1.1rem;
+}
+
+.forge-priority-rank {
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(120 53 15 / 0.1);
+    color: rgb(146 64 14);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.forge-stat-goal-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 1.15rem;
+    border: 1px solid rgb(231 229 228);
+    background: rgba(255, 255, 255, 0.74);
+    padding: 0.9rem 1rem;
+}
+
+.forge-top-divider {
+    height: 1px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(245, 158, 11, 0),
+        rgba(120, 113, 108, 0.28),
+        rgba(245, 158, 11, 0)
+    );
+}
+
+.forge-character-page .forge-top-divider {
+    background: linear-gradient(
+        90deg,
+        rgba(180, 83, 9, 0),
+        rgba(120, 53, 15, 0.2),
+        rgba(180, 83, 9, 0)
+    );
+    box-shadow: 0 0 18px rgba(217, 119, 6, 0.08);
+}
+
+.forge-stat-goal-meter {
+    display: flex;
+    align-items: center;
+}
+
+.forge-stat-goal-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(245, 245, 244, 0.95);
+    border: 1px solid rgb(231 229 228);
+}
+
+.forge-character-page .forge-stat-goal-track {
+    border-color: rgba(120, 53, 15, 0.16);
+    background: linear-gradient(
+        180deg,
+        rgba(227, 217, 196, 0.54),
+        rgba(241, 235, 223, 0.92)
+    );
+    box-shadow:
+        inset 0 1px 2px rgba(41, 30, 21, 0.08),
+        inset 0 1px 0 rgba(255, 252, 244, 0.72);
+}
+
+.forge-stat-goal-fill {
+    height: 100%;
+    min-width: 3.5rem;
+    border-radius: 999px;
+    background: rgb(var(--forge-goal-rgb) / 0.95);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+    transition: width 220ms ease;
+}
+
+.forge-character-page .forge-stat-goal-fill {
+    background: linear-gradient(
+        90deg,
+        rgb(var(--forge-goal-rgb) / 0.78),
+        rgb(var(--forge-goal-rgb) / 0.98)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        0 0 12px rgb(var(--forge-goal-rgb) / 0.18);
+}
+
+.forge-stat-goal-fill-value {
+    display: inline-flex;
+    height: 100%;
+    align-items: center;
+    padding-left: 0.8rem;
+    color: white;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.forge-stat-goal-target-value {
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgb(68 64 60);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .forge-stat-goal-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) {
+    .forge-progression-rail-inner {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: start;
+        gap: 1.25rem;
+    }
+
+    .forge-progression-rail-header {
+        padding-top: 0.35rem;
+    }
+
+    .forge-progression-rail-tracks {
+        gap: 0.65rem;
+    }
+
+    .forge-progression-rail-track {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 0.85rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .forge-top-divider {
+        height: 100%;
+        width: 1px;
+        background: linear-gradient(
+            180deg,
+            rgba(245, 158, 11, 0),
+            rgba(120, 113, 108, 0.28),
+            rgba(245, 158, 11, 0)
+        );
+    }
+}
+
+.forge-target-rank {
+    display: inline-flex;
+    min-width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(245 158 11 / 0.14);
+    color: rgb(180 83 9);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.45rem 0.65rem;
+}
+
+.forge-target-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: rgb(28 25 23 / 0.06);
+    color: rgb(68 64 60);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    padding: 0.35rem 0.55rem;
+    text-transform: uppercase;
+}
+
+.forge-character-page .forge-target-pill {
+    border: 1px solid rgba(120, 53, 15, 0.14);
+    background: linear-gradient(
+        180deg,
+        rgba(252, 246, 230, 0.95),
+        rgba(241, 228, 201, 0.9)
+    );
+    color: rgb(120 53 15);
+    box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.84);
+}
+
+.forge-media-frame {
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(251, 191, 36, 0.18),
+            transparent 40%
+        ),
+        linear-gradient(180deg, rgba(28, 25, 23, 0.96), rgba(12, 10, 9, 0.96));
+}
+
+.forge-media {
+    display: block;
+    width: 100%;
+    min-height: 20rem;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.02);
+    transition:
+        opacity 260ms ease,
+        transform 420ms ease;
+}
+
+.forge-media[data-ready="true"] {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.forge-media-fallback {
+    display: flex;
+    min-height: 20rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.forge-item-card {
+    position: relative;
+    border-radius: 1.35rem;
+    border: 1px solid rgb(231 229 228);
+    padding: 1rem;
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease;
+}
+
+.forge-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(28, 25, 23, 0.08);
+}
+
+.forge-item-icon-shell {
+    display: flex;
+    height: 4rem;
+    width: 4rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgba(28, 25, 23, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.forge-item-icon {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 220ms ease;
+}
+
+.forge-item-icon[data-ready="true"] {
+    opacity: 1;
+}
+
+.forge-item-icon-fallback {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.forge-tag {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    border: 1px solid rgba(120, 113, 108, 0.2);
+    background: rgba(255, 255, 255, 0.6);
+    padding: 0.28rem 0.65rem;
+}
+
+.forge-empty-state {
+    background: rgba(255, 255, 255, 0.48);
+    backdrop-filter: blur(14px);
+}
+
+.forge-character-page .forge-empty-state {
+    border-color: rgba(120, 53, 15, 0.22);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 251, 240, 0.86),
+        rgba(244, 234, 216, 0.78)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.88),
+        0 18px 40px rgba(41, 30, 21, 0.08);
+}
+
+.forge-character-page .forge-selector-backdrop {
+    background:
+        radial-gradient(
+            circle at 50% 18%,
+            rgba(120, 53, 15, 0.16),
+            transparent 26%
+        ),
+        rgba(41, 30, 21, 0.46);
+    backdrop-filter: blur(6px) saturate(70%);
+}
+
+.forge-character-page .forge-selector-modal {
+    border-radius: 2rem;
+    border: 1px solid rgba(120, 53, 15, 0.22);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 252, 245, 0.97),
+            rgba(242, 230, 205, 0.94)
+        ),
+        linear-gradient(
+            135deg,
+            rgba(250, 245, 232, 0.8),
+            rgba(255, 251, 241, 0.34)
+        );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 252, 244, 0.94),
+        0 36px 100px rgba(41, 30, 21, 0.22);
+    backdrop-filter: blur(14px);
+}
+
+.forge-character-page .forge-selector-close {
+    border-color: rgba(120, 53, 15, 0.18);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 252, 244, 0.96),
+        rgba(245, 236, 220, 0.92)
+    );
+    color: rgb(120 113 108);
+    box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.88);
+    transition:
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+}
+
+.forge-character-page .forge-selector-close:hover {
+    border-color: rgba(120, 53, 15, 0.34);
+    color: rgb(41 30 21);
+    transform: translateY(-1px);
+}
+
+.forge-tooltip {
+    pointer-events: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 60;
+    max-width: 18rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(250, 204, 21, 0.28);
+    background: rgba(28, 25, 23, 0.95);
+    padding: 0.8rem 0.9rem;
+    color: rgb(250 250 249);
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 120ms ease;
+}
+
+.forge-tooltip[data-visible="true"] {
+    opacity: 1;
+}
+
+.forge-tooltip-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.forge-tooltip-body {
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: rgb(214 211 209);
+}
+
+@media (max-width: 640px) {
+    .forge-tooltip {
+        display: none;
+    }
+}

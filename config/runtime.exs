@@ -23,6 +23,14 @@ end
 config :lightforge, LightforgeWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
+config :lightforge, Lightforge.BattleNet.Config,
+  client_id: System.get_env("BATTLENET_CLIENT_ID", ""),
+  client_secret: System.get_env("BATTLENET_CLIENT_SECRET", ""),
+  default_region: System.get_env("BATTLENET_REGION", "us"),
+  redirect_uri:
+    System.get_env("BATTLENET_REDIRECT_URI") ||
+      "http://localhost:#{System.get_env("PORT", "4000")}/auth/bnet/callback"
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
