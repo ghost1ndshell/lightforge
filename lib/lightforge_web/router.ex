@@ -12,6 +12,29 @@ defmodule LightforgeWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  scope "/api/v1", LightforgeWeb.Api.V1 do
+    pipe_through :api
+
+    get "/me/bnet/status", BattleNetConnectionController, :status
+    post "/bnet/connect/start", BattleNetConnectionController, :start
+    get "/bnet/connect/callback", BattleNetConnectionController, :callback
+
+    get "/characters", CharacterController, :index
+
+    get "/characters/:region/:realm/:name/snapshots/latest", SnapshotController, :show
+    get "/characters/:region/:realm/:name/gear", CharacterController, :gear
+    get "/characters/:region/:realm/:name", CharacterController, :show
+    post "/characters/:region/:realm/:name/sync", CharacterSyncController, :create
+
+    post "/logs/reports/:code/import", LogReportController, :create
+    get "/logs/reports/:code", LogReportController, :show
+
+    post "/analysis/fights/:fight_id/import", AnalysisController, :create
+    get "/analysis/fights/:fight_id", AnalysisController, :show_fight
+    get "/analysis/fights/:fight_id/participants/:participant_id", AnalysisController, :show_participant
   end
 
   scope "/", LightforgeWeb do

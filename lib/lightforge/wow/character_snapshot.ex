@@ -13,12 +13,25 @@ defmodule Lightforge.Wow.CharacterSnapshot do
   alias Lightforge.Wow.TrackedAchievementPlanner
 
   def fetch(token_data, attrs) do
+    with {:ok, %{character_input: character_input, item_media_by_id: item_media_by_id} = payload} <-
+           fetch_payload(token_data, attrs) do
+      responses = payload.responses
+      {:ok, to_character(character_input, responses, item_media_by_id)}
+    end
+  end
+
+  def fetch_payload(token_data, attrs) do
     with :ok <- validate_token(token_data),
          {:ok, character_input} <- normalize_input(attrs),
          {:ok, responses} <- fetch_core_responses(token_data, character_input),
          {:ok, item_media_by_id} <-
            fetch_item_media(token_data, character_input.region, responses.equipment) do
-      {:ok, to_character(character_input, responses, item_media_by_id)}
+      {:ok,
+       %{
+         character_input: character_input,
+         item_media_by_id: item_media_by_id,
+         responses: responses
+       }}
     end
   end
 
