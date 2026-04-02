@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Cormorant+SC:wght@500;600;700&display=swap");
+@import "tailwindcss";
 
 :root {
     --font-display: "Cormorant SC", Georgia, serif;
@@ -167,5 +167,119 @@ h4,
     .forge-panel:hover::before {
         opacity: 1;
         transform: translateX(30%);
+    }
+
+    .forge-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        overflow: hidden;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(110, 73, 34, 0.32);
+        background:
+            linear-gradient(180deg, rgba(142, 84, 34, 0.96), rgba(107, 62, 28, 0.94)),
+            linear-gradient(135deg, rgba(69, 223, 242, 0.06), transparent 52%);
+        color: #fff4e6;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 233, 205, 0.22),
+            0 14px 28px rgba(102, 62, 28, 0.2);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+            transform var(--duration-fast) ease,
+            border-color var(--duration-base) ease,
+            box-shadow var(--duration-base) ease,
+            filter var(--duration-base) ease;
+    }
+
+    .forge-button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(69, 223, 242, 0.2) 50%,
+            transparent 100%
+        );
+        opacity: 0;
+        transform: translateX(-45%);
+        transition:
+            opacity var(--duration-fast) ease,
+            transform var(--duration-slow) ease;
+    }
+
+    .forge-button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(69, 223, 242, 0.38);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 240, 220, 0.26),
+            0 0 28px rgba(69, 223, 242, 0.14),
+            0 16px 28px rgba(102, 62, 28, 0.24);
+        filter: saturate(1.04);
+    }
+
+    .forge-button:hover::before {
+        opacity: 1;
+        transform: translateX(45%);
+    }
+
+    .forge-button:focus-visible {
+        outline: none;
+        border-color: rgba(69, 223, 242, 0.44);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 240, 220, 0.28),
+            0 0 0 3px rgba(69, 223, 242, 0.16),
+            0 0 32px rgba(69, 223, 242, 0.18),
+            0 16px 28px rgba(102, 62, 28, 0.2);
+    }
+
+    .forge-button:disabled {
+        cursor: wait;
+        opacity: 0.7;
+        transform: none;
+    }
+
+    .forge-button--secondary {
+        background:
+            linear-gradient(180deg, rgba(255, 250, 242, 0.92), rgba(240, 224, 199, 0.88)),
+            linear-gradient(135deg, rgba(133, 92, 198, 0.08), transparent 48%);
+        color: var(--text-ink);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 253, 248, 0.72),
+            0 12px 24px rgba(120, 82, 48, 0.14);
+    }
+
+    .forge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(110, 73, 34, 0.18);
+        background: rgba(255, 248, 236, 0.74);
+        padding: 0.55rem 0.95rem;
+        color: var(--text-soft);
+        box-shadow: inset 0 1px 0 rgba(255, 253, 248, 0.6);
+    }
+
+    .forge-status::before {
+        content: "";
+        display: inline-block;
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 999px;
+        background: rgba(150, 118, 87, 0.7);
+        box-shadow: 0 0 0 4px rgba(150, 118, 87, 0.08);
+    }
+
+    .forge-status[data-state="connected"]::before {
+        background: var(--rarity-normal);
+        box-shadow: 0 0 0 4px rgba(94, 203, 131, 0.12);
     }
 }
