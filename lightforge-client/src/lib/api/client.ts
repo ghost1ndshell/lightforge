@@ -1,12 +1,12 @@
 export type ApiErrorPayload = {
   error?: {
     code?: string;
-    msg?: string;
+    message?: string;
   };
 };
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`http://localhost:4000${path}`, {
+  const res = await fetch(path, {
     ...init,
     credentials: "include",
     headers: {
@@ -18,9 +18,9 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const body = await res.json();
 
   if (!res.ok) {
-    const msg = body?.error?.msg ?? "Request failed";
+    const message = body?.error?.message ?? "Request failed";
 
-    throw new Error(msg);
+    throw new Error(message);
   }
 
   return body as T;
