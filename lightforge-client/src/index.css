@@ -1,1 +1,171 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Cormorant+SC:wght@500;600;700&display=swap");
+
+:root {
+    --font-display: "Cormorant SC", Georgia, serif;
+    --font-body: "Alegreya", Georgia, serif;
+
+    --bg-foundry: #e7dccb;
+    --bg-stone: #d8c8b0;
+    --bg-shadow: #8d7964;
+
+    --surface-vellum: rgba(255, 245, 230, 0.72);
+    --surface-parchment: rgba(250, 236, 214, 0.84);
+    --surface-scroll: rgba(239, 217, 188, 0.88);
+
+    --edge-bronze: rgba(145, 97, 48, 0.48);
+    --edge-iron: rgba(92, 78, 66, 0.35);
+    --edge-ember: rgba(224, 127, 54, 0.24);
+    --edge-arcane: rgba(133, 92, 198, 0.26);
+
+    --text-ink: #3e2f25;
+    --text-soft: #665241;
+    --text-muted: #8b7461;
+
+    --arcane-violet: #7f58c8;
+    --arcane-violet-soft: rgba(133, 92, 198, 0.12);
+    --interactive-cyan: #45dff2;
+    --interactive-cyan-soft: rgba(105, 245, 255, 0.16);
+    --glow-hearth: rgba(255, 166, 73, 0.22);
+
+    --rarity-normal: #5ecb83;
+    --rarity-rare: #57a6ff;
+    --rarity-mythic: #a56dff;
+    --rarity-legendary: #e7a33a;
+
+    --shadow-forge: 0 24px 60px rgba(71, 45, 24, 0.18);
+    --shadow-scroll:
+        inset 0 1px 0 rgba(255, 250, 241, 0.68),
+        inset 0 -1px 0 rgba(148, 108, 74, 0.16),
+        0 18px 40px rgba(88, 56, 31, 0.16);
+    --shadow-arcane:
+        0 0 0 1px rgba(69, 223, 242, 0.18),
+        0 0 32px rgba(69, 223, 242, 0.12);
+
+    --radius-panel: 1.5rem;
+    --radius-pill: 999px;
+
+    --duration-fast: 160ms;
+    --duration-base: 240ms;
+    --duration-slow: 420ms;
+}
+
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    color: var(--text-ink);
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(255, 194, 116, 0.32),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at top right,
+            rgba(105, 245, 255, 0.1),
+            transparent 18%
+        ),
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(133, 92, 198, 0.1),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(196, 110, 46, 0.14),
+            transparent 28%
+        ),
+        linear-gradient(
+            180deg,
+            #f2e8d8 0%,
+            var(--bg-foundry) 32%,
+            var(--bg-stone) 72%,
+            #cfb99d 100%
+        );
+    font-family: var(--font-body);
+    line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+[data-font="display"],
+.font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+}
+
+@layer components {
+    .forge-shell {
+        @apply mx-auto w-full max-w-7xl px-6 py-8 sm:px-8 lg:px-10;
+    }
+
+    .forge-panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-panel);
+        border: 1px solid var(--edge-bronze);
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 251, 242, 0.94),
+                rgba(245, 229, 205, 0.9)
+            ),
+            linear-gradient(135deg, rgba(133, 92, 198, 0.08), transparent 42%),
+            linear-gradient(225deg, rgba(255, 175, 73, 0.08), transparent 38%),
+            var(--surface-parchment);
+        box-shadow: var(--shadow-scroll);
+        transition:
+            transform var(--duration-base) ease,
+            border-color var(--duration-base) ease,
+            box-shadow var(--duration-base) ease,
+            background-color var(--duration-base) ease;
+        backdrop-filter: blur(12px);
+    }
+
+    .forge-panel:hover {
+        transform: translateY(-2px);
+        border-color: rgba(69, 223, 242, 0.3);
+        box-shadow:
+            var(--shadow-scroll),
+            0 0 30px rgba(69, 223, 242, 0.1),
+            0 10px 32px rgba(121, 79, 42, 0.12);
+    }
+
+    .forge-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(69, 223, 242, 0.08) 50%,
+            transparent 100%
+        );
+        opacity: 0;
+        transform: translateX(-30%);
+        transition:
+            opacity var(--duration-base) ease,
+            transform var(--duration-slow) ease;
+    }
+
+    .forge-panel:hover::before {
+        opacity: 1;
+        transform: translateX(30%);
+    }
+}
