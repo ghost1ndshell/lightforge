@@ -7,6 +7,7 @@ import {
 import { HomePage } from "../routes/home";
 import { AuthCallbackPage } from "../routes/auth-callback";
 import { CharactersPage } from "../routes/characters";
+import { CharacterDetailPage } from "../routes/character-detail";
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -30,10 +31,17 @@ const charactersRoute = createRoute({
   component: CharactersPage,
 });
 
+const characterDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/characters/$region/$realm/$name",
+  component: CharacterDetailPage,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   authCallbackRoute,
   charactersRoute,
+  characterDetailRoute,
 ]);
 
 export const router = createRouter({ routeTree });
