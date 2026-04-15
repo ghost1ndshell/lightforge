@@ -3,7 +3,9 @@ import {
   getCharacter,
   getCharacters,
   getCharacterGear,
+  getCharacterGearing,
   getCharacterSnapshot,
+  type GearingMode,
 } from "./api";
 
 export function useCharacters() {
@@ -35,5 +37,17 @@ export function useCharacterGear(region: string, realm: string, name: string) {
   return useQuery({
     queryKey: ["character", region, realm, name, "gear"],
     queryFn: () => getCharacterGear(region, realm, name),
+  });
+}
+
+export function useCharacterGearing(
+  region: string,
+  realm: string,
+  name: string,
+  mode: GearingMode,
+) {
+  return useQuery({
+    queryKey: ["character", region, realm, name, "gearing", mode],
+    queryFn: () => getCharacterGearing(region, realm, name, mode),
   });
 }

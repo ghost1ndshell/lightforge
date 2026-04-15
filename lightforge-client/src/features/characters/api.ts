@@ -61,6 +61,93 @@ export type CharacterGearResponse = {
   };
 };
 
+export type GearingMode = "dungeons" | "raid";
+
+export type GearingTarget = {
+  current_item_level: number | null;
+  current_item_name: string;
+  priority: number;
+  reason: string;
+  slot: string;
+  source_name: string;
+  source_type: string;
+  status: string;
+  target_item_level_hint: number | null;
+  target_name: string;
+  tier: string;
+};
+
+export type GearingPrioritySlot = {
+  current_item_level: number | null;
+  reason: string;
+  slot: string;
+  urgency: string;
+};
+
+export type GearingStatFocus = {
+  current_display: string;
+  label: string;
+  progress: number | null;
+  target_display: string;
+};
+
+export type GearingStatLine = {
+  display: string;
+  label: string;
+};
+
+export type CharacterGearingResponse = {
+  data: {
+    character: {
+      class_name: string | null;
+      level: number | null;
+      name: string;
+      region: string;
+      realm: string;
+      spec_name: string | null;
+    };
+    current_trinkets: Array<{
+      item_level: number | null;
+      item_name: string | null;
+      slot: string | null;
+    }>;
+    meta: {
+      note: string;
+      reviewed_on: string | null;
+      season: string;
+      source_name: string;
+    };
+    mode: GearingMode;
+    pending: boolean;
+    priority_slots: GearingPrioritySlot[];
+    snapshot: {
+      captured_at: string;
+      equipped_item_level: number | null;
+      id: number;
+    };
+    stat_direction: {
+      current: GearingStatLine[];
+      focus: GearingStatFocus[];
+      mode: string;
+      note: string;
+      reviewed_on: string;
+      source_name: string;
+      source_url?: string | null;
+    } | null;
+    summary: {
+      headline: string;
+      subheadline: string;
+    };
+    top_targets: GearingTarget[];
+    weekly_route: Array<{
+      label: string;
+      reason: string;
+      source_name: string;
+      source_type: string;
+    }>;
+  };
+};
+
 export function getCharacters() {
   return api<CharactersIndexResponse>("/api/v1/characters");
 }
@@ -84,5 +171,16 @@ export function getCharacterSnapshot(
 export function getCharacterGear(region: string, realm: string, name: string) {
   return api<CharacterGearResponse>(
     `/api/v1/characters/${region}/${realm}/${name}/gear`,
+  );
+}
+
+export function getCharacterGearing(
+  region: string,
+  realm: string,
+  name: string,
+  mode: GearingMode,
+) {
+  return api<CharacterGearingResponse>(
+    `/api/v1/characters/${region}/${realm}/${name}/gearing?mode=${mode}`,
   );
 }

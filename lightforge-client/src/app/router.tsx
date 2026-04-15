@@ -8,6 +8,7 @@ import { HomePage } from "../routes/home";
 import { AuthCallbackPage } from "../routes/auth-callback";
 import { CharactersPage } from "../routes/characters";
 import { CharacterDetailPage } from "../routes/character-detail";
+import { CharacterGearingPage } from "../routes/character-gearing";
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -37,11 +38,18 @@ const characterDetailRoute = createRoute({
   component: CharacterDetailPage,
 });
 
+const characterGearingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/characters/$region/$realm/$name/forge-path/$mode",
+  component: CharacterGearingPage,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   authCallbackRoute,
   charactersRoute,
   characterDetailRoute,
+  characterGearingRoute,
 ]);
 
 export const router = createRouter({ routeTree });
