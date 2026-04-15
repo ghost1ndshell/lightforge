@@ -90,12 +90,18 @@ export function HomePage() {
               )}
 
               {statusQuery.data.data.connected && (
-                <Link
-                  to="/characters"
-                  className="forge-button forge-button--secondary px-5 py-3"
-                >
-                  View characters
-                </Link>
+                <>
+                  <Link
+                    to="/characters"
+                    className="forge-button forge-button--secondary px-5 py-3"
+                  >
+                    View characters
+                  </Link>
+
+                  <a href="/character" className="forge-button px-5 py-3">
+                    Sync character
+                  </a>
+                </>
               )}
             </div>
           )}

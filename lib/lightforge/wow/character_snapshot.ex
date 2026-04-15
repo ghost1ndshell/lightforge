@@ -7,6 +7,7 @@ defmodule Lightforge.Wow.CharacterSnapshot do
   alias Lightforge.Wow.ContentPlanner
   alias Lightforge.Wow.GearPlanner
   alias Lightforge.Wow.Item
+  alias Lightforge.Wow.MidnightSeason
   alias Lightforge.Wow.ProgressionPlanner
   alias Lightforge.Wow.SpecPriority
   alias Lightforge.Wow.StatGoalPlanner
@@ -202,7 +203,8 @@ defmodule Lightforge.Wow.CharacterSnapshot do
       tracked_achievements:
         TrackedAchievementPlanner.build(%{
           active_spec: active_spec,
-          character_class: character_class
+          character_class: character_class,
+          mythic_summary: mythic_summary
         }),
       suggestions:
         build_suggestions(profile["equipped_item_level"], mythic_summary, achievement_summary),
@@ -384,7 +386,14 @@ defmodule Lightforge.Wow.CharacterSnapshot do
   end
 
   defp normalize_mythic_summary(nil),
-    do: %{best_key: nil, best_dungeon: nil, dungeon_runs: [], run_count: 0, score: nil}
+    do: %{
+      best_key: nil,
+      best_dungeon: nil,
+      dungeon_runs: [],
+      run_count: 0,
+      score: nil,
+      vault_options: 0
+    }
 
   defp normalize_mythic_summary(body) do
     best_runs =
@@ -419,7 +428,8 @@ defmodule Lightforge.Wow.CharacterSnapshot do
           get_in(body, ["current_mythic_rating", "rating"]),
           get_in(body, ["current_period", "mythic_rating", "rating"]),
           get_in(body, ["current_season", "mythic_rating", "rating"])
-        ])
+        ]),
+      vault_options: MidnightSeason.vault_options(length(best_runs))
     }
   end
 
@@ -479,12 +489,13 @@ defmodule Lightforge.Wow.CharacterSnapshot do
       "Push at least one higher key this week. Your current best suggests there is still easy room to improve vault quality."
     )
     |> maybe_add_suggestion(
-      item_level < 645,
-      "Prioritize efficient upgrade sources first: mid-range Mythic+ keys and heroic-raid quality slots will move your floor faster than scattered farming."
+      item_level < MidnightSeason.focused_readiness(),
+      "Prioritize efficient upgrade sources first: targeted dungeon keys and reliable raid-quality slots will move your floor faster than scattered farming on the squished item-level scale."
     )
     |> maybe_add_suggestion(
-      item_level >= 645 and item_level < 665,
-      "Focus on targeted slots now. Your item level is high enough that trinkets, weapon slots, and vault choices will matter more than broad farming."
+      item_level >= MidnightSeason.focused_readiness() and
+        item_level < MidnightSeason.selective_readiness(),
+      "Focus on targeted slots now. Your item level is high enough that trinkets, weapon slots, and vault choices matter more than broad farming."
     )
     |> maybe_add_suggestion(
       achievement_summary.points && achievement_summary.points < 15_000,

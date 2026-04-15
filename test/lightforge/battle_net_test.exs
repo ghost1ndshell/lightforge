@@ -109,7 +109,7 @@ defmodule Lightforge.BattleNetTest do
     assert character.label =~ "Priest"
   end
 
-  test "fetch_character_snapshot/2 builds a pre-season Holy Paladin gear plan" do
+  test "fetch_character_snapshot/2 builds a live Season 1 Holy Paladin gear plan" do
     Req.Test.expect(__MODULE__, 8, &holy_route_response/1)
 
     token_data = %{access_token: "battle-token", expires_at: System.system_time(:second) + 3600}
@@ -124,13 +124,13 @@ defmodule Lightforge.BattleNetTest do
     assert snapshot.active_spec == "Holy"
     assert snapshot.gear_plan.guide_name == "Method"
     assert snapshot.gear_plan.pending? == false
-    assert snapshot.gear_plan.note =~ "March 17, 2026"
+    assert snapshot.gear_plan.note =~ "post-squish item-level scale"
     assert snapshot.guild == "Silver Hand"
     assert snapshot.progression_plan.tracks |> Enum.any?(&(&1.label == "M+"))
     assert snapshot.progression_plan.tracks |> Enum.any?(&(&1.label == "Raid"))
 
     assert snapshot.content_plan.actions
-           |> Enum.any?(&(&1.title == "Secure your Holy Paladin bridge set"))
+           |> Enum.any?(&(&1.title == "Refine your Holy Paladin Season 1 route"))
 
     assert snapshot.stat_goal_plan.source_name == "Method + WingsIsUp"
     assert Enum.any?(snapshot.stat_goal_plan.goals, &(&1.label == "Haste"))
@@ -150,7 +150,7 @@ defmodule Lightforge.BattleNetTest do
         Req.Test.json(conn, %{
           "active_spec" => %{"name" => "Havoc"},
           "character_class" => %{"name" => "Demon Hunter"},
-          "equipped_item_level" => 658,
+          "equipped_item_level" => 268,
           "faction" => %{"name" => "Horde"},
           "gender" => %{"name" => "Male"},
           "guild" => %{"name" => "Ashen Vanguard"},
@@ -166,7 +166,7 @@ defmodule Lightforge.BattleNetTest do
             %{
               "inventory_type" => %{"name" => "Sword"},
               "item" => %{"id" => 19019},
-              "level" => %{"value" => 658},
+              "level" => %{"value" => 268},
               "name" => "Thunderfury",
               "quality" => %{"type" => "LEGENDARY"},
               "slot" => %{"name" => "Main Hand", "type" => "MAIN_HAND"}
@@ -174,7 +174,7 @@ defmodule Lightforge.BattleNetTest do
             %{
               "inventory_type" => %{"name" => "Trinket"},
               "item" => %{"id" => 193_757},
-              "level" => %{"value" => 652},
+              "level" => %{"value" => 262},
               "name" => "Beacon to the Beyond",
               "quality" => %{"type" => "EPIC"},
               "slot" => %{"name" => "Trinket 1", "type" => "TRINKET_1"}
@@ -249,7 +249,7 @@ defmodule Lightforge.BattleNetTest do
         Req.Test.json(conn, %{
           "active_spec" => %{"name" => "Holy"},
           "character_class" => %{"name" => "Paladin"},
-          "equipped_item_level" => 658,
+          "equipped_item_level" => 268,
           "faction" => %{"name" => "Alliance"},
           "gender" => %{"name" => "Male"},
           "guild" => %{"name" => "Silver Hand"},
@@ -265,7 +265,7 @@ defmodule Lightforge.BattleNetTest do
             %{
               "inventory_type" => %{"name" => "Hammer"},
               "item" => %{"id" => 101},
-              "level" => %{"value" => 658},
+              "level" => %{"value" => 268},
               "name" => "Arathi Abbot's Gavel",
               "quality" => %{"type" => "EPIC"},
               "slot" => %{"name" => "Main Hand", "type" => "MAIN_HAND"}

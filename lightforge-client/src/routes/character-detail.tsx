@@ -1,4 +1,9 @@
+import { useState } from "react";
 import { Link, useMatch } from "@tanstack/react-router";
+import {
+  AnimatePresence,
+  motion,
+} from "motion/react";
 import { AppShell } from "../components/layout/AppShell";
 import { Panel } from "../components/ui/Panel";
 import type { GearItem } from "../features/characters/api";
@@ -10,63 +15,48 @@ import {
 
 type JsonMap = Record<string, unknown>;
 
-type StatCard = {
+type StageSlot = {
+  aliases?: string[];
+  key: string;
   label: string;
-  value: number;
-  unit?: string;
 };
 
-const slotOrder: Record<string, number> = {
-  HEAD: 1,
-  NECK: 2,
-  SHOULDER: 3,
-  BACK: 4,
-  CHEST: 5,
-  WRIST: 6,
-  HANDS: 7,
-  WAIST: 8,
-  LEGS: 9,
-  FEET: 10,
-  FINGER_1: 11,
-  FINGER_2: 12,
-  TRINKET_1: 13,
-  TRINKET_2: 14,
-  MAIN_HAND: 15,
-  OFF_HAND: 16,
-  TWOHWEAPON: 17,
+const stageSlots: StageSlot[] = [
+  { key: "HEAD", label: "Head" },
+  { key: "NECK", label: "Neck" },
+  { key: "SHOULDER", label: "Shoulder" },
+  { key: "BACK", label: "Back" },
+  { key: "CHEST", label: "Chest" },
+  { key: "WRIST", label: "Wrist" },
+  { key: "HANDS", label: "Hands" },
+  { key: "WAIST", label: "Waist" },
+  { key: "LEGS", label: "Legs" },
+  { key: "FEET", label: "Feet" },
+  { key: "FINGER_1", label: "Ring I" },
+  { key: "FINGER_2", label: "Ring II" },
+  { key: "TRINKET_1", label: "Trinket I" },
+  { key: "TRINKET_2", label: "Trinket II" },
+  { aliases: ["TWOHWEAPON"], key: "MAIN_HAND", label: "Main Hand" },
+  { key: "OFF_HAND", label: "Off-Hand" },
+];
+
+const slotTransition = {
+  type: "spring" as const,
+  stiffness: 320,
+  damping: 24,
+  mass: 0.7,
+};
+
+const previewVariants = {
+  enter: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.97, y: 10 },
+  initial: { opacity: 0, scale: 0.96, y: 12 },
 };
 
 function asRecord(value: unknown): JsonMap | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
     ? (value as JsonMap)
     : null;
-}
-
-function readPath(source: JsonMap | null, path: string[]): unknown {
-  return path.reduce<unknown>((current, key) => {
-    const record = asRecord(current);
-    return record ? record[key] : undefined;
-  }, source);
-}
-
-function firstNumber(source: JsonMap | null, candidates: string[][]): number | null {
-  for (const path of candidates) {
-    const value = readPath(source, path);
-
-    if (typeof value === "number" && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value === "string") {
-      const parsed = Number(value);
-
-      if (Number.isFinite(parsed)) {
-        return parsed;
-      }
-    }
-  }
-
-  return null;
 }
 
 function formatTimestamp(value: string | null | undefined) {
@@ -84,59 +74,6 @@ function formatTimestamp(value: string | null | undefined) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
-}
-
-function buildStatCards(statistics: JsonMap | null): StatCard[] {
-  const definitions = [
-    {
-      label: "Haste",
-      unit: "%",
-      candidates: [["haste", "rating"], ["haste", "value"], ["haste"]],
-    },
-    {
-      label: "Mastery",
-      unit: "%",
-      candidates: [["mastery", "rating"], ["mastery", "value"], ["mastery"]],
-    },
-    {
-      label: "Critical Strike",
-      unit: "%",
-      candidates: [
-        ["crit", "rating"],
-        ["critical_strike", "rating"],
-        ["criticalStrike", "rating"],
-        ["crit"],
-      ],
-    },
-    {
-      label: "Versatility",
-      unit: "%",
-      candidates: [["versatility", "rating"], ["versatility", "value"], ["versatility"]],
-    },
-  ];
-
-  return definitions.reduce<StatCard[]>((cards, definition) => {
-    const value = firstNumber(statistics, definition.candidates);
-
-    if (value !== null) {
-      cards.push({ label: definition.label, value, unit: definition.unit });
-    }
-
-    return cards;
-  }, []);
-}
-
-function sortGearItems(items: GearItem[]) {
-  return [...items].sort((left, right) => {
-    const leftOrder = slotOrder[left.slot_key ?? ""] ?? 999;
-    const rightOrder = slotOrder[right.slot_key ?? ""] ?? 999;
-
-    if (leftOrder !== rightOrder) {
-      return leftOrder - rightOrder;
-    }
-
-    return (left.slot_name ?? "").localeCompare(right.slot_name ?? "");
-  });
 }
 
 function rarityColor(quality: string | null) {
@@ -165,29 +102,126 @@ function rarityBorder(quality: string | null) {
   const normalized = quality?.toLowerCase() ?? "";
 
   if (normalized.includes("legendary")) {
-    return "rgba(231, 163, 58, 0.28)";
+    return "rgba(231, 163, 58, 0.34)";
   }
 
   if (normalized.includes("epic") || normalized.includes("mythic")) {
-    return "rgba(165, 109, 255, 0.24)";
+    return "rgba(165, 109, 255, 0.28)";
   }
 
   if (normalized.includes("rare")) {
-    return "rgba(87, 166, 255, 0.24)";
+    return "rgba(87, 166, 255, 0.28)";
   }
 
   if (normalized.includes("uncommon") || normalized.includes("normal")) {
-    return "rgba(94, 203, 131, 0.24)";
+    return "rgba(94, 203, 131, 0.28)";
   }
 
   return "rgba(110, 73, 34, 0.16)";
 }
 
-function getTrinkets(items: GearItem[]) {
-  return items.filter((item) => {
-    const key = (item.slot_key ?? item.slot_name ?? "").toLowerCase();
-    return key.includes("trinket");
+function mediaAssetUrl(mediaJson: JsonMap | null, keys: string[]) {
+  const assets = asRecord(mediaJson)?.assets;
+
+  if (!Array.isArray(assets)) {
+    return null;
+  }
+
+  for (const key of keys) {
+    const asset = assets.find((entry) => {
+      const record = asRecord(entry);
+      return record?.key === key;
+    });
+
+    const value = asRecord(asset)?.value;
+
+    if (typeof value === "string" && value !== "") {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function findItemForSlot(items: GearItem[], slot: StageSlot) {
+  const validKeys = [slot.key, ...(slot.aliases ?? [])];
+
+  return items.find((item) => {
+    if (!item.slot_key) {
+      return false;
+    }
+
+    return validKeys.includes(item.slot_key);
   });
+}
+
+function renderSlotLabel(slot: StageSlot) {
+  return slot.label;
+}
+
+function renderSlot(
+  slot: StageSlot,
+  items: GearItem[],
+  activeSlotKey: string | null,
+  setActiveSlotKey: (key: string | null) => void,
+  index: number,
+) {
+  const item = findItemForSlot(items, slot);
+  const isActive = activeSlotKey === slot.key;
+
+  return (
+    <motion.button
+      key={slot.key}
+      type="button"
+      initial={{ opacity: 0, x: 14 }}
+      animate={{
+        opacity: 1,
+        scale: isActive ? 1.02 : 1,
+        x: isActive ? -4 : 0,
+      }}
+      transition={{
+        ...slotTransition,
+        delay: 0.2 + index * 0.025,
+      }}
+      whileHover={{ rotateX: -2, scale: 1.025, x: -5 }}
+      whileTap={{ scale: 0.99 }}
+      className={[
+        "forge-stage__slot-row",
+        isActive && "forge-stage__slot-row--active",
+        !item && "forge-stage__slot-row--empty",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      onBlur={() => setActiveSlotKey(null)}
+      onFocus={() => setActiveSlotKey(slot.key)}
+      onMouseEnter={() => setActiveSlotKey(slot.key)}
+      style={{
+        borderColor: isActive
+          ? rarityBorder(item?.quality ?? null)
+          : undefined,
+      }}
+    >
+      <span
+        className={[
+          "forge-stage__slot-icon",
+          item ? "forge-stage__slot-icon--equipped" : "forge-stage__slot-icon--empty",
+        ].join(" ")}
+        aria-hidden="true"
+      >
+        <span className="forge-stage__slot-dot" />
+      </span>
+      <span className="forge-stage__slot-slug">{renderSlotLabel(slot)}</span>
+      <motion.span
+        className="forge-stage__slot-sheen"
+        aria-hidden="true"
+        animate={{
+          opacity: isActive ? 1 : 0,
+          x: isActive ? 0 : -18,
+        }}
+        transition={slotTransition}
+      />
+    </motion.button>
+  );
 }
 
 export function CharacterDetailPage() {
@@ -198,15 +232,26 @@ export function CharacterDetailPage() {
   const snapshotQuery = useCharacterSnapshot(region, realm, name);
   const gearQuery = useCharacterGear(region, realm, name);
 
+  const character = characterQuery.data?.data.character;
+  const latestSnapshot = characterQuery.data?.data.latest_snapshot;
   const snapshot = snapshotQuery.data?.data ?? null;
-  const sortedGear = sortGearItems(gearQuery.data?.data.items ?? []);
-  const statCards = buildStatCards(snapshot?.statistics_json ?? null);
-  const trinkets = getTrinkets(sortedGear);
+  const items = gearQuery.data?.data.items ?? [];
+  const renderUrl = mediaAssetUrl(snapshot?.media_json ?? null, [
+    "main-raw",
+    "main",
+    "avatar",
+  ]);
+  const [activeSlotKey, setActiveSlotKey] = useState<string | null>(null);
+  const primaryRailSlots = stageSlots.slice(0, 8);
+  const secondaryRailSlots = stageSlots.slice(8);
+  const previewSlot =
+    stageSlots.find((slot) => slot.key === activeSlotKey) ?? null;
+  const previewItem = previewSlot ? findItemForSlot(items, previewSlot) : null;
 
   return (
     <AppShell>
       <div className="grid gap-6 py-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/characters"
             className="forge-button forge-button--secondary px-4 py-2"
@@ -231,279 +276,215 @@ export function CharacterDetailPage() {
           </Panel>
         )}
 
-        {characterQuery.data && (
-          <>
-            <div className="grid gap-6 xl:grid-cols-[1.25fr_0.85fr]">
-              <div className="grid gap-6">
-                <Panel className="p-8">
-                  <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-start">
-                    <div className="min-w-0 space-y-6">
-                      <div className="min-w-0">
-                        <p className="forge-section-kicker">Forged Profile</p>
-                        <h1 className="mt-4 truncate text-5xl text-[color:var(--text-ink)]">
-                          {characterQuery.data.data.character.name}
-                        </h1>
-                        <p className="mt-3 text-base text-[color:var(--text-soft)]">
-                          {characterQuery.data.data.character.realm} ·{" "}
-                          {characterQuery.data.data.character.region.toUpperCase()}
-                        </p>
+        {character && (
+          <Panel className="forge-stage-page p-0">
+            <section className="forge-stage__header">
+              <div className="forge-stage__brief">
+                <p className="forge-section-kicker">Character Briefing</p>
+                <div className="forge-stage__title-row">
+                  <h1 className="text-5xl text-[color:var(--text-ink)] sm:text-6xl">
+                    {character.name}
+                  </h1>
 
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          <span className="forge-data-chip">
-                            {characterQuery.data.data.character.spec_name ?? "Unknown spec"}
-                          </span>
-                          <span className="forge-data-chip">
-                            {characterQuery.data.data.character.class_name ?? "Unknown class"}
-                          </span>
-                          <span className="forge-data-chip">
-                            Level {characterQuery.data.data.character.level ?? "?"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="forge-quiet-panel bg-[rgba(255,247,236,0.76)]">
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="forge-section-kicker">Stat Forge</p>
-                          {snapshotQuery.isPending && (
-                            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                              Reading
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                          {(statCards.length > 0
-                            ? statCards
-                            : [
-                                { label: "Stats", value: 0, unit: "", placeholder: "Awaiting mapping" },
-                                { label: "Goals", value: 0, unit: "", placeholder: "Planner needed" },
-                                { label: "Delta", value: 0, unit: "", placeholder: "Spec rules pending" },
-                                { label: "Focus", value: 0, unit: "", placeholder: "No stat model yet" },
-                              ]
-                          ).map((stat) => (
-                            <div
-                              key={stat.label}
-                              className="rounded-2xl border border-[rgba(110,73,34,0.14)] bg-[rgba(255,250,243,0.8)] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,252,246,0.54)]"
-                            >
-                              <p className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                                {stat.label}
-                              </p>
-                              {"placeholder" in stat ? (
-                                <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
-                                  {stat.placeholder}
-                                </p>
-                              ) : (
-                                <>
-                                  <p className="mt-3 text-2xl text-[color:var(--text-ink)]">
-                                    {stat.value.toLocaleString()}
-                                    {stat.unit && (
-                                      <span className="ml-1 text-base text-[color:var(--text-soft)]">
-                                        {stat.unit}
-                                      </span>
-                                    )}
-                                  </p>
-                                  <div className="mt-3 h-1.5 rounded-full bg-[rgba(125,93,64,0.12)]">
-                                    <div
-                                      className="h-full rounded-full bg-[linear-gradient(90deg,rgba(179,112,44,0.88),rgba(69,223,242,0.58))]"
-                                      style={{ width: `${Math.min(stat.value, 100)}%` }}
-                                    />
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid gap-3">
-                      <div className="forge-metric-tile">
-                        <p className="forge-section-kicker">Item Level</p>
-                        <p className="mt-3 text-4xl text-[color:var(--text-ink)]">
-                          {characterQuery.data.data.latest_snapshot?.equipped_item_level ?? "?"}
-                        </p>
-                        <p className="mt-2 text-sm text-[color:var(--text-soft)]">
-                          Current equipped benchmark
-                        </p>
-                      </div>
-
-                      <div className="forge-metric-tile">
-                        <p className="forge-section-kicker">Gear Stored</p>
-                        <p className="mt-3 text-3xl text-[color:var(--text-ink)]">
-                          {characterQuery.data.data.latest_snapshot?.gear_item_count ?? 0}
-                        </p>
-                        <p className="mt-2 text-sm text-[color:var(--text-soft)]">
-                          Items captured in the latest snapshot
-                        </p>
-                      </div>
-
-                      <div className="forge-metric-tile">
-                        <p className="forge-section-kicker">Last Sync</p>
-                        <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
-                          {formatTimestamp(characterQuery.data.data.latest_snapshot?.captured_at)}
-                        </p>
-                        <p className="mt-2 text-sm text-[color:var(--text-soft)]">
-                          Use this to judge how fresh the profile is
-                        </p>
-                      </div>
-                    </div>
+                  <div className="forge-stage__pills">
+                    <span className="forge-data-chip">
+                      {character.spec_name ?? "Unknown spec"}
+                    </span>
+                    <span className="forge-data-chip">
+                      {character.class_name ?? "Unknown class"}
+                    </span>
+                    <span className="forge-data-chip">
+                      Level {character.level ?? "?"}
+                    </span>
+                    <span className="forge-data-chip">
+                      {character.realm} · {character.region.toUpperCase()}
+                    </span>
                   </div>
-                </Panel>
+                </div>
+              </div>
 
-                <Panel className="p-6">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="forge-section-heading">
-                      <p className="forge-section-kicker">Gear Anvil</p>
-                      <h2 className="text-3xl text-[color:var(--text-ink)]">
-                        Equipped loadout
-                      </h2>
-                    </div>
+              <div className="forge-stage__meta">
+                <article className="forge-stage__meta-card">
+                  <p className="forge-section-kicker">Snapshot</p>
+                  <p className="mt-3 text-4xl text-[color:var(--text-ink)]">
+                    {latestSnapshot?.equipped_item_level ?? "?"}
+                  </p>
+                </article>
 
-                    {gearQuery.isPending && (
-                      <p className="text-sm text-[color:var(--text-muted)]">
-                        Reading gear...
+                <article className="forge-stage__meta-card">
+                  <p className="forge-section-kicker">Last Sync</p>
+                  <p className="mt-3 text-sm leading-7 text-[color:var(--text-soft)]">
+                    {formatTimestamp(latestSnapshot?.captured_at)}
+                  </p>
+                  <a
+                    href="/character"
+                    className="mt-4 inline-flex forge-button forge-button--secondary px-4 py-2 text-sm"
+                  >
+                    Sync latest snapshot
+                  </a>
+                </article>
+              </div>
+            </section>
+
+            <motion.section
+              className={[
+                "forge-stage__scene",
+                previewSlot && "forge-stage__scene--active",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+            >
+              <motion.div className="forge-stage__render-wrap">
+                <motion.div
+                  className="forge-stage__render-shell"
+                  initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.65, ease: "easeOut", delay: 0.12 }}
+                >
+                  {renderUrl ? (
+                    <img
+                      alt={`${character.name} character render`}
+                      className="forge-stage__render"
+                      src={renderUrl}
+                    />
+                  ) : (
+                    <motion.div
+                      className="forge-stage__render-fallback"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                    >
+                      <p className="forge-section-kicker">Render pending</p>
+                      <p className="mt-3 text-xl text-[color:var(--text-ink)]">
+                        Character media is not available in the latest snapshot.
                       </p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </motion.div>
+
+              <motion.aside
+                className="forge-stage__rail"
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.18 }}
+                onMouseLeave={() => setActiveSlotKey(null)}
+              >
+                <AnimatePresence>
+                  {previewSlot && (
+                    <motion.article
+                      key={previewSlot.key}
+                      className="forge-stage__preview"
+                      initial="initial"
+                      animate="enter"
+                      exit="exit"
+                      variants={previewVariants}
+                      transition={slotTransition}
+                      style={{
+                        borderColor: rarityBorder(previewItem?.quality ?? null),
+                      }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="forge-section-kicker">Slot Preview</p>
+                          <h2 className="mt-2 text-2xl text-[color:var(--text-ink)]">
+                            {previewSlot.label}
+                          </h2>
+                        </div>
+
+                        <span
+                          className={[
+                            "forge-stage__slot-icon",
+                            previewItem
+                              ? "forge-stage__slot-icon--equipped"
+                              : "forge-stage__slot-icon--empty",
+                          ].join(" ")}
+                          aria-hidden="true"
+                        >
+                          <span className="forge-stage__slot-dot" />
+                        </span>
+                      </div>
+
+                      {previewItem ? (
+                        <div className="mt-4 grid gap-3">
+                          <div>
+                            <p
+                              className="text-lg leading-7"
+                              style={{
+                                color: rarityColor(previewItem.quality ?? null),
+                              }}
+                            >
+                              {previewItem.item_name}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            <span className="forge-data-chip">
+                              iLvl {previewItem.item_level ?? "--"}
+                            </span>
+                            {previewItem.inventory_type && (
+                              <span className="forge-data-chip">
+                                {previewItem.inventory_type}
+                              </span>
+                            )}
+                            {previewItem.quality && (
+                              <span className="forge-data-chip">
+                                {previewItem.quality}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="mt-4 text-sm leading-7 text-[color:var(--text-soft)]">
+                          No item equipped in this slot.
+                        </p>
+                      )}
+                    </motion.article>
+                  )}
+                </AnimatePresence>
+
+                <div
+                  className={[
+                    "forge-stage__slot-columns",
+                    previewSlot && "forge-stage__slot-columns--with-preview",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <div className="forge-stage__slot-panel">
+                    {primaryRailSlots.map((slot, index) =>
+                      renderSlot(slot, items, activeSlotKey, setActiveSlotKey, index),
                     )}
                   </div>
 
-                  {gearQuery.isError && (
-                    <p className="mt-5 text-sm text-red-700">
-                      Equipped gear could not be loaded.
-                    </p>
-                  )}
+                  <div className="forge-stage__slot-panel">
+                    {secondaryRailSlots.map((slot, index) =>
+                      renderSlot(
+                        slot,
+                        items,
+                        activeSlotKey,
+                        setActiveSlotKey,
+                        primaryRailSlots.length + index,
+                      ),
+                    )}
+                  </div>
+                </div>
+              </motion.aside>
+            </motion.section>
 
-                  {!gearQuery.isError && sortedGear.length === 0 && (
-                    <div className="forge-quiet-panel mt-5">
-                      <p className="text-sm leading-6 text-[color:var(--text-soft)]">
-                        No gear snapshot is stored yet for this character.
-                      </p>
-                    </div>
-                  )}
-
-                  {sortedGear.length > 0 && (
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                      {sortedGear.map((item) => (
-                        <div
-                          key={`${item.slot_key}-${item.blizzard_item_id ?? item.item_name}`}
-                          className="forge-quiet-panel transition-transform duration-200 hover:-translate-y-1"
-                          style={{ borderColor: rarityBorder(item.quality) }}
-                        >
-                          <div className="flex items-start gap-3">
-                            {item.icon_url ? (
-                              <img
-                                alt={item.item_name ?? item.slot_name ?? "Item icon"}
-                                className="h-12 w-12 rounded-2xl border border-[rgba(110,73,34,0.14)] object-cover"
-                                src={item.icon_url}
-                              />
-                            ) : (
-                              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[rgba(110,73,34,0.14)] bg-[rgba(234,220,198,0.66)] text-xs text-[color:var(--text-muted)]">
-                                --
-                              </div>
-                            )}
-
-                            <div className="min-w-0">
-                              <p className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                                {item.slot_name ?? item.slot_key ?? "Slot"}
-                              </p>
-                              <h3
-                                className="mt-1 line-clamp-2 text-lg"
-                                style={{ color: rarityColor(item.quality) }}
-                              >
-                                {item.item_name ?? "Unknown item"}
-                              </h3>
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            <span className="forge-data-chip">iLvl {item.item_level ?? "?"}</span>
-                            {item.inventory_type && (
-                              <span className="forge-data-chip">{item.inventory_type}</span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Panel>
+            {(snapshotQuery.isPending || gearQuery.isPending) && (
+              <div className="px-8 pb-8">
+                <div className="forge-quiet-panel">
+                  <p className="text-sm leading-6 text-[color:var(--text-soft)]">
+                    Refreshing stage data...
+                  </p>
+                </div>
               </div>
-
-              <div className="grid gap-6">
-                <Panel className="p-6">
-                  <div className="forge-section-heading">
-                    <p className="forge-section-kicker">Trinket Chamber</p>
-                    <h2 className="text-3xl text-[color:var(--text-ink)]">
-                      Current relics
-                    </h2>
-                  </div>
-
-                  {trinkets.length > 0 ? (
-                    <div className="mt-5 grid gap-3">
-                      {trinkets.map((trinket) => (
-                        <div
-                          key={`${trinket.slot_key}-${trinket.blizzard_item_id ?? trinket.item_name}`}
-                          className="forge-quiet-panel"
-                          style={{ borderColor: rarityBorder(trinket.quality) }}
-                        >
-                          <p className="forge-section-kicker">
-                            {trinket.slot_name ?? trinket.slot_key ?? "Trinket"}
-                          </p>
-                          <h3
-                            className="mt-2 text-2xl"
-                            style={{ color: rarityColor(trinket.quality) }}
-                          >
-                            {trinket.item_name ?? "Unknown trinket"}
-                          </h3>
-                          <p className="mt-3 text-sm text-[color:var(--text-soft)]">
-                            iLvl {trinket.item_level ?? "?"}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="forge-quiet-panel mt-5">
-                      <p className="text-sm leading-6 text-[color:var(--text-soft)]">
-                        No trinkets were found in the stored gear snapshot.
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="forge-quiet-panel mt-4">
-                    <p className="text-sm leading-6 text-[color:var(--text-soft)]">
-                      S-tier trinkets and equip-impact should appear here once the
-                      recommendation layer is ready.
-                    </p>
-                  </div>
-                </Panel>
-
-                <Panel className="p-6">
-                  <div className="forge-section-heading">
-                    <p className="forge-section-kicker">Encounter Intelligence</p>
-                    <h2 className="text-3xl text-[color:var(--text-ink)]">
-                      Highest-impact signals
-                    </h2>
-                  </div>
-
-                  <div className="mt-5 grid gap-3">
-                    <div className="forge-quiet-panel">
-                      <p className="text-sm leading-6 text-[color:var(--text-soft)]">
-                        Warcraft Logs and WoWAnalyzer output should be filtered here
-                        into top findings, not long report text.
-                      </p>
-                    </div>
-
-                    <div className="forge-quiet-panel border-[rgba(69,223,242,0.22)] bg-[rgba(245,252,253,0.56)]">
-                      <p className="forge-section-kicker">Reserved slot</p>
-                      <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
-                        This space is for top 3 encounter issues, one-line
-                        recommendations, and compact impact indicators.
-                      </p>
-                    </div>
-                  </div>
-                </Panel>
-              </div>
-            </div>
-
-          </>
+            )}
+          </Panel>
         )}
       </div>
     </AppShell>

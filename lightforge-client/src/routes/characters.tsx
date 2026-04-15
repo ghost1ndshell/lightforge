@@ -72,9 +72,7 @@ export function CharactersPage() {
       <div className="grid gap-6 py-8">
         {charactersQuery.isPending && (
           <Panel className="p-6">
-            <p className="text-sm text-[color:var(--text-muted)]">
-              Loading roster...
-            </p>
+            <p className="text-sm text-(--text-muted)">Loading roster...</p>
           </Panel>
         )}
 
@@ -88,19 +86,23 @@ export function CharactersPage() {
           <Panel className="p-7 lg:p-8">
             <div className="forge-section-heading">
               <p className="forge-section-kicker">Roster</p>
-              <h1 className="text-3xl text-[color:var(--text-ink)]">
-                Available profiles
-              </h1>
+              <h1 className="text-3xl text-(--text-ink)">Available profiles</h1>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="forge-data-chip">0 stored</span>
             </div>
 
-            <p className="mt-6 max-w-xl text-sm leading-6 text-[color:var(--text-soft)]">
+            <p className="mt-6 max-w-xl text-sm leading-6 text-(--text-soft)">
               Connect Battle.net, then sync a character so the roster can start
               filling with profiles.
             </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/character" className="forge-button px-5 py-3">
+                Sync your first character
+              </a>
+            </div>
           </Panel>
         )}
 
@@ -109,7 +111,7 @@ export function CharactersPage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="forge-section-heading">
                 <p className="forge-section-kicker">Roster</p>
-                <h1 className="text-3xl text-[color:var(--text-ink)]">
+                <h1 className="text-3xl text-(--text-ink)">
                   Available profiles
                 </h1>
               </div>
@@ -118,6 +120,12 @@ export function CharactersPage() {
                 <span className="forge-data-chip">
                   {charactersQuery.data.data.length} stored
                 </span>
+                <a
+                  href="/character"
+                  className="forge-button forge-button--secondary px-4 py-2"
+                >
+                  Sync character
+                </a>
               </div>
             </div>
 
@@ -143,10 +151,10 @@ export function CharactersPage() {
                       />
 
                       <span className="min-w-0">
-                        <span className="block truncate text-base font-medium text-[color:var(--text-ink)]">
+                        <span className="block truncate text-base font-medium text-(--text-ink)">
                           {character.name}
                         </span>
-                        <span className="block truncate text-xs uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                        <span className="block truncate text-xs uppercase tracking-[0.18em] text-(--text-muted)">
                           {character.class_name ?? "Unknown"} ·{" "}
                           {character.spec_name ?? "Unknown spec"}
                         </span>
@@ -157,7 +165,7 @@ export function CharactersPage() {
                       <span className="hidden sm:block forge-roster-chip__meta">
                         {character.realm}
                       </span>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(110,73,34,0.16)] bg-[rgba(255,249,239,0.76)] text-base text-[color:var(--text-ink)] shadow-[inset_0_1px_0_rgba(255,252,246,0.52)]">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(110,73,34,0.16)] bg-[rgba(255,249,239,0.76)] text-base text-(--text-ink) shadow-[inset_0_1px_0_rgba(255,252,246,0.52)]">
                         ›
                       </span>
                     </div>

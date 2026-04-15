@@ -64,7 +64,7 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
                },
                "latest_snapshot" => %{
                  "id" => ^snapshot_id,
-                 "equipped_item_level" => 658,
+                 "equipped_item_level" => 268,
                  "gear_item_count" => 1
                }
              }
@@ -90,7 +90,7 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
     assert %{
              "data" => %{
                "id" => ^snapshot_id,
-               "equipped_item_level" => 658,
+               "equipped_item_level" => 268,
                "profile_json" => %{"name" => "Illidan"},
                "media_json" => %{"assets" => _}
              }
@@ -125,7 +125,7 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
         Req.Test.json(conn, %{
           "active_spec" => %{"name" => "Havoc"},
           "character_class" => %{"name" => "Demon Hunter"},
-          "equipped_item_level" => 658,
+          "equipped_item_level" => 268,
           "faction" => %{"name" => "Horde"},
           "level" => 80,
           "name" => "Illidan",
@@ -138,7 +138,7 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
             %{
               "inventory_type" => %{"name" => "Sword"},
               "item" => %{"id" => 19019},
-              "level" => %{"value" => 658},
+              "level" => %{"value" => 268},
               "name" => "Thunderfury",
               "quality" => %{"type" => "LEGENDARY"},
               "slot" => %{"name" => "Main Hand", "type" => "MAIN_HAND"}

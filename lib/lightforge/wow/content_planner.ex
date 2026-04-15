@@ -1,9 +1,7 @@
 defmodule Lightforge.Wow.ContentPlanner do
   @moduledoc false
 
-  @season_one_start ~D[2026-03-17]
-  @darkway_open ~D[2026-03-24]
-  @parhelion_plaza_open ~D[2026-03-31]
+  alias Lightforge.Wow.MidnightSeason
 
   def build(attrs, today \\ Date.utc_today()) when is_map(attrs) do
     mythic_summary = Map.get(attrs, :mythic_summary) || %{}
@@ -53,10 +51,10 @@ defmodule Lightforge.Wow.ContentPlanner do
       %{
         title: "Finish Midnight campaign",
         detail:
-          if Date.compare(today, @season_one_start) == :lt do
-            "Use the pre-season window to finish the launch campaign before Season 1 opens on March 17, 2026."
-          else
+          if MidnightSeason.season_live?(today) do
             "Keep campaign progression current so your weekly activities stay unlocked as Season 1 expands."
+          else
+            "Use the pre-season window to finish the launch campaign before Season 1 opens on March 17, 2026."
           end
       },
       %{
@@ -114,9 +112,9 @@ defmodule Lightforge.Wow.ContentPlanner do
     actions ++
       [
         %{
-          title: "Secure your Holy Paladin bridge set",
+          title: "Refine your Holy Paladin Season 1 route",
           detail:
-            "Keep using the pre-season Holy plan as a bridge only. Replace it with real Season 1 targets once March 17, 2026 arrives."
+            "Keep the route narrow around weapon, trinkets, and one jewelry slot so your Season 1 upgrades stay efficient on the squished item-level scale."
         }
       ]
   end
@@ -124,61 +122,52 @@ defmodule Lightforge.Wow.ContentPlanner do
   defp maybe_add_holy_paladin_action(actions, _attrs), do: actions
 
   defp phase_label(today) do
-    if Date.compare(today, @season_one_start) == :lt,
-      do: "Midnight pre-season",
-      else: "Midnight Season 1"
+    MidnightSeason.phase_label(today)
   end
 
   defp phase_detail(today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Season 1 opens March 17, 2026."
-    else
+    if MidnightSeason.season_live?(today) do
       "Season 1 is live. Weekly dungeon and raid planning should now take priority."
+    else
+      "Season 1 opens March 17, 2026."
     end
   end
 
   defp dungeon_track_value(%{best_key: nil}, today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "No tracked dungeon clears yet"
-    else
-      "No Mythic+ route tracked yet"
-    end
+    if MidnightSeason.season_live?(today),
+      do: "No Mythic+ route tracked yet",
+      else: "No tracked dungeon clears yet"
   end
 
   defp dungeon_track_value(%{best_key: key, best_dungeon: dungeon}, today) when is_integer(key) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Best tracked run: +#{key}#{dungeon_suffix(dungeon)}"
-    else
-      "Best key: +#{key}#{dungeon_suffix(dungeon)}"
-    end
+    if MidnightSeason.season_live?(today),
+      do: "Best key: +#{key}#{dungeon_suffix(dungeon)}",
+      else: "Best tracked run: +#{key}#{dungeon_suffix(dungeon)}"
   end
 
   defp dungeon_track_value(_mythic_summary, _today), do: "No tracked dungeon activity"
 
   defp dungeon_track_detail(%{best_key: nil}, today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Use the launch window to get comfortable with the Midnight dungeon pool before Season 1 starts."
-    else
-      "Start building your weekly route and vault baseline."
-    end
+    if MidnightSeason.season_live?(today),
+      do: "Start building your weekly route and vault baseline.",
+      else:
+        "Use the launch window to get comfortable with the Midnight dungeon pool before Season 1 starts."
   end
 
   defp dungeon_track_detail(%{run_count: run_count}, today) do
     runs = if is_integer(run_count), do: run_count, else: 0
 
-    if Date.compare(today, @season_one_start) == :lt do
-      "#{runs} tracked run(s) recorded in the current profile snapshot."
-    else
-      "#{runs} tracked seasonal run(s) recorded in the current profile snapshot."
-    end
+    if MidnightSeason.season_live?(today),
+      do: "#{runs} tracked seasonal run(s) recorded in the current profile snapshot.",
+      else: "#{runs} tracked run(s) recorded in the current profile snapshot."
   end
 
   defp delve_value(today) do
     cond do
-      Date.compare(today, @darkway_open) == :lt ->
+      Date.compare(today, MidnightSeason.darkway_open()) == :lt ->
         "Launch delve set active"
 
-      Date.compare(today, @parhelion_plaza_open) == :lt ->
+      Date.compare(today, MidnightSeason.parhelion_plaza_open()) == :lt ->
         "Darkway unlocked"
 
       true ->
@@ -188,10 +177,10 @@ defmodule Lightforge.Wow.ContentPlanner do
 
   defp delve_detail(today) do
     cond do
-      Date.compare(today, @darkway_open) == :lt ->
+      Date.compare(today, MidnightSeason.darkway_open()) == :lt ->
         "The Darkway unlocks on March 24, 2026. Parhelion Plaza unlocks on March 31, 2026."
 
-      Date.compare(today, @parhelion_plaza_open) == :lt ->
+      Date.compare(today, MidnightSeason.parhelion_plaza_open()) == :lt ->
         "The Darkway is live. Parhelion Plaza unlocks on March 31, 2026."
 
       true ->
@@ -212,43 +201,39 @@ defmodule Lightforge.Wow.ContentPlanner do
   defp readiness_value(_item_level), do: "Item level unavailable"
 
   defp readiness_detail(today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Use this week to smooth out weak slots and be ready to pivot once Season 1 loot becomes available."
-    else
+    if MidnightSeason.season_live?(today) do
       "Shift from launch smoothing to exact seasonal upgrade planning."
+    else
+      "Use this week to smooth out weak slots and be ready to pivot once Season 1 loot becomes available."
     end
   end
 
   defp dungeon_action_title(%{best_key: nil}, today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Start the launch dungeon circuit"
-    else
-      "Start your weekly Mythic+ route"
-    end
+    if MidnightSeason.season_live?(today),
+      do: "Start your weekly Mythic+ route",
+      else: "Start the launch dungeon circuit"
   end
 
   defp dungeon_action_title(_mythic_summary, today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Keep dungeon familiarity high"
-    else
-      "Push your next key threshold"
-    end
+    if MidnightSeason.season_live?(today),
+      do: "Push your next key threshold",
+      else: "Keep dungeon familiarity high"
   end
 
   defp dungeon_action_detail(%{best_key: nil}, today) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "Run the launch dungeon pool now so your routing and role cadence are clean before March 17, 2026."
-    else
-      "Get at least one meaningful seasonal key on the board for routing and weekly planning."
-    end
+    if MidnightSeason.season_live?(today),
+      do:
+        "Get at least one meaningful seasonal key on the board for routing and weekly planning.",
+      else:
+        "Run the launch dungeon pool now so your routing and role cadence are clean before March 17, 2026."
   end
 
   defp dungeon_action_detail(%{best_key: key}, today) when is_integer(key) do
-    if Date.compare(today, @season_one_start) == :lt do
-      "You already have tracked dungeon activity. Use the remaining pre-season window to tighten execution rather than broad farming."
-    else
-      "Your current best key is +#{key}. Push the next threshold that meaningfully upgrades your weekly options."
-    end
+    if MidnightSeason.season_live?(today),
+      do:
+        "Your current best key is +#{key}. Push the next threshold that meaningfully upgrades your weekly options.",
+      else:
+        "You already have tracked dungeon activity. Use the remaining pre-season window to tighten execution rather than broad farming."
   end
 
   defp dungeon_action_detail(_mythic_summary, _today),
@@ -256,10 +241,10 @@ defmodule Lightforge.Wow.ContentPlanner do
 
   defp delve_action_detail(today) do
     cond do
-      Date.compare(today, @darkway_open) == :lt ->
+      Date.compare(today, MidnightSeason.darkway_open()) == :lt ->
         "Work through the launch delve set now. Darkway opens on March 24, 2026 and Parhelion Plaza follows on March 31, 2026."
 
-      Date.compare(today, @parhelion_plaza_open) == :lt ->
+      Date.compare(today, MidnightSeason.parhelion_plaza_open()) == :lt ->
         "Add Darkway into your delve loop now and be ready to fold in Parhelion Plaza on March 31, 2026."
 
       true ->
@@ -268,7 +253,7 @@ defmodule Lightforge.Wow.ContentPlanner do
   end
 
   defp dungeon_milestone_value(%{best_key: nil}, today) do
-    if Date.compare(today, @season_one_start) == :lt, do: "Pre-season prep", else: "Not started"
+    if MidnightSeason.season_live?(today), do: "Not started", else: "Pre-season prep"
   end
 
   defp dungeon_milestone_value(%{best_key: key}, _today) when is_integer(key),
@@ -278,8 +263,8 @@ defmodule Lightforge.Wow.ContentPlanner do
 
   defp delve_milestone_value(today) do
     cond do
-      Date.compare(today, @darkway_open) == :lt -> "Launch set only"
-      Date.compare(today, @parhelion_plaza_open) == :lt -> "Darkway live"
+      Date.compare(today, MidnightSeason.darkway_open()) == :lt -> "Launch set only"
+      Date.compare(today, MidnightSeason.parhelion_plaza_open()) == :lt -> "Darkway live"
       true -> "Expanded launch set live"
     end
   end

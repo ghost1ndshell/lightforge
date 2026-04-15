@@ -32,13 +32,14 @@ defmodule Lightforge.Wow.GearPlanner do
       guide_name: @holy_paladin_guide_name,
       guide_url: @holy_paladin_guide_url,
       note:
-        "This is a Midnight pre-season Holy Paladin plan based on current 12.0 launch guidance. Blizzard says Midnight Season 1 starts on March 17, 2026, so these targets should be treated as a short-lived bridge until Season 1 loot opens.",
+        "This is a compact Midnight Season 1 Holy Paladin plan. Lightforge now uses the post-squish item-level scale, so treat these targets as a narrow route rather than a giant loot table.",
       pending?: false,
       targets:
         [
           %{
             content_type: "Campaign",
-            note: "Current cloak baseline in launch-period Holy Paladin gearing.",
+            note:
+              "Clean campaign cloak anchor if your back slot is still behind on the squished Season 1 scale.",
             priority: 1,
             slot_keys: ["BACK"],
             slot_label: "Back",
@@ -47,7 +48,7 @@ defmodule Lightforge.Wow.GearPlanner do
           },
           %{
             content_type: "Dungeon",
-            note: "Strong current pre-season trinket choice from the launch dungeon pool.",
+            note: "Strong current trinket choice from the live Midnight dungeon pool.",
             priority: 2,
             slot_keys: ["TRINKET_1", "TRINKET_2"],
             slot_label: "Trinket",
@@ -56,7 +57,7 @@ defmodule Lightforge.Wow.GearPlanner do
           },
           %{
             content_type: "Dungeon",
-            note: "Good all-purpose stat-stick trinket for current launch gearing.",
+            note: "Good all-purpose stat-stick trinket for current Season 1 gearing.",
             priority: 3,
             slot_keys: ["TRINKET_1", "TRINKET_2"],
             slot_label: "Trinket",
@@ -65,7 +66,8 @@ defmodule Lightforge.Wow.GearPlanner do
           },
           %{
             content_type: "Dungeon",
-            note: "Current pre-season weapon target from the Method launch list.",
+            note:
+              "Weapon target worth chasing if your current main hand is still below the focused-readiness band.",
             priority: 4,
             slot_keys: ["MAIN_HAND"],
             slot_label: "Weapon",
@@ -74,7 +76,7 @@ defmodule Lightforge.Wow.GearPlanner do
           },
           %{
             content_type: "Dungeon",
-            note: "Current pre-season off-hand target paired with dungeon weapon routes.",
+            note: "Off-hand target that pairs cleanly with the current dungeon weapon route.",
             priority: 5,
             slot_keys: ["OFF_HAND"],
             slot_label: "Off-Hand",
@@ -83,7 +85,8 @@ defmodule Lightforge.Wow.GearPlanner do
           },
           %{
             content_type: "Dungeon",
-            note: "Good current ring target if your jewelry is lagging behind.",
+            note:
+              "Useful ring route once weapon and trinkets stop dragging the character upward curve.",
             priority: 6,
             slot_keys: ["FINGER_1", "FINGER_2"],
             slot_label: "Ring",
