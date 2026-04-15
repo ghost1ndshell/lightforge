@@ -3,6 +3,8 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
 
   alias Lightforge.Characters
   alias Lightforge.Characters.Character
+  alias Lightforge.Analysis
+  alias Lightforge.Logs
   alias LightforgeWeb.BattleNetSession
 
   setup {Req.Test, :set_req_test_from_context}
@@ -117,6 +119,148 @@ defmodule LightforgeWeb.Api.V1.CharacterApiTest do
 
     response = get(conn, "/api/v1/characters/us/stormrage/illidan/snapshots/latest")
     assert %{"error" => %{"code" => "not_found"}} = json_response(response, 404)
+
+    response = get(conn, "/api/v1/characters/us/stormrage/illidan/detail")
+    assert %{"error" => %{"code" => "not_found"}} = json_response(response, 404)
+  end
+
+  test "detail endpoint returns composed snapshot, gear, gearing, and analysis", %{conn: conn} do
+    {:ok, character} =
+      Characters.create_character(%{
+        region: "us",
+        realm: "Stormrage",
+        realm_slug: "stormrage",
+        name: "Illidan",
+        class_name: "Demon Hunter",
+        spec_name: "Havoc",
+        level: 80
+      })
+
+    {:ok, snapshot} =
+      Characters.create_snapshot(
+        character,
+        %{
+          captured_at: DateTime.utc_now(),
+          equipped_item_level: 268,
+          profile_json: %{"name" => "Illidan"},
+          statistics_json: %{"melee_crit" => %{"value" => 24.81}},
+          achievements_json: %{"total_points" => 14_220},
+          mythic_json: %{"current_mythic_rating" => %{"rating" => 2_456.7}},
+          media_json: %{
+            "assets" => [
+              %{"key" => "main-raw", "value" => "https://cdn.lightforge.test/illidan.png"}
+            ]
+          }
+        },
+        [
+          %{
+            blizzard_item_id: 19019,
+            icon_url: "https://cdn.lightforge.test/items/thunderfury.png",
+            inventory_type: "Sword",
+            item_level: 268,
+            item_name: "Thunderfury",
+            quality: "LEGENDARY",
+            slot_key: "MAIN_HAND",
+            slot_name: "Main Hand"
+          },
+          %{
+            blizzard_item_id: 193_757,
+            icon_url: "https://cdn.lightforge.test/items/beacon.png",
+            inventory_type: "Trinket",
+            item_level: 262,
+            item_name: "Beacon to the Beyond",
+            quality: "EPIC",
+            slot_key: "TRINKET_1",
+            slot_name: "Trinket 1"
+          }
+        ]
+      )
+
+    report = Logs.upsert_report(%{code: "abc123", raw_json: %{}})
+
+    fight =
+      Logs.upsert_fight(%{
+        report_id: report.id,
+        warcraftlogs_fight_id: 7,
+        encounter_id: 9002,
+        encounter_name: "Vorasius",
+        raw_json: %{},
+        kill: true
+      })
+
+    participant =
+      Logs.upsert_participant(%{
+        fight_id: fight.id,
+        actor_id: 44,
+        name: "Illidan",
+        server_name: "Stormrage",
+        class_name: "Demon Hunter",
+        spec_name: "Havoc",
+        role: "damager",
+        item_level: 268,
+        raw_json: %{}
+      })
+
+    assert {:ok, _run} =
+             Analysis.import_run(fight.id, %{
+               provider: "wowanalyzer",
+               participant_id: participant.id,
+               score: 77.0,
+               summary_json: %{headline: "Keep momentum on cooldown windows"},
+               raw_json: %{source: "fixture"},
+               insights: [
+                 %{
+                   severity: "high",
+                   category: "cooldowns",
+                   title: "Major cooldown drift",
+                   summary: "You delayed major cooldowns several times.",
+                   recommendation: "Line cooldowns up with the encounter plan.",
+                   impact_score: 9.4,
+                   highlighted: true,
+                   metadata_json: %{casts_missed: 2}
+                 }
+               ]
+             })
+
+    response = get(conn, "/api/v1/characters/us/stormrage/illidan/detail")
+
+    assert %{
+             "data" => %{
+               "character" => %{
+                 "name" => "Illidan",
+                 "class_name" => "Demon Hunter"
+               },
+               "snapshot" => %{
+                 "id" => snapshot_id,
+                 "equipped_item_level" => 268
+               },
+               "items" => [
+                 %{"item_name" => "Thunderfury"},
+                 %{"item_name" => "Beacon to the Beyond"}
+               ],
+               "analysis" => %{
+                 "provider" => "wowanalyzer",
+                 "score" => 77.0,
+                 "fight" => %{
+                   "encounter_name" => "Vorasius",
+                   "report_code" => "abc123"
+                 },
+                 "insights" => [
+                   %{
+                     "title" => "Major cooldown drift",
+                     "highlighted" => true
+                   }
+                 ]
+               },
+               "gearing" => %{
+                 "mode" => "dungeons",
+                 "summary" => %{"headline" => headline}
+               }
+             }
+           } = json_response(response, 200)
+
+    assert snapshot_id == snapshot.id
+    assert headline =~ "Curated dungeon path is not ready"
   end
 
   defp battle_net_response(conn) do

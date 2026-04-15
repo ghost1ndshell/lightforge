@@ -26,6 +26,7 @@ defmodule LightforgeWeb.Router do
 
     get "/characters/:region/:realm/:name/snapshots/latest", SnapshotController, :show
     get "/characters/:region/:realm/:name/gear", CharacterController, :gear
+    get "/characters/:region/:realm/:name/detail", CharacterDetailController, :show
     get "/characters/:region/:realm/:name/gearing", GearingController, :show
     get "/characters/:region/:realm/:name", CharacterController, :show
     post "/characters/:region/:realm/:name/sync", CharacterSyncController, :create

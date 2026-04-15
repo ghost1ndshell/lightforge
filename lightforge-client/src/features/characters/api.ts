@@ -42,6 +42,102 @@ export type CharacterSnapshotResponse = {
   };
 };
 
+export type CharacterAnalysisInsight = {
+  category: string | null;
+  display_order: number;
+  highlighted: boolean;
+  id: number;
+  impact_score: number | null;
+  metadata_json: JsonMap | null;
+  provider: string | null;
+  recommendation: string | null;
+  severity: string | null;
+  source_key: string | null;
+  summary: string | null;
+  title: string;
+};
+
+export type CharacterDetailResponse = {
+  data: {
+    analysis: {
+      fight: {
+        difficulty: number | null;
+        encounter_name: string | null;
+        kill: boolean | null;
+        report_code: string | null;
+      };
+      finished_at: string | null;
+      id: number;
+      insights: CharacterAnalysisInsight[];
+      participant: {
+        class_name: string | null;
+        item_level: number | null;
+        name: string | null;
+        role: string | null;
+        server_name: string | null;
+        spec_name: string | null;
+      };
+      provider: string;
+      ruleset_version: string | null;
+      score: number | null;
+      source_version: string | null;
+      started_at: string;
+      status: string;
+      summary_json: JsonMap | null;
+    } | null;
+    character: CharacterListItem;
+    gearing: {
+      current_trinkets: Array<{
+        item_level: number | null;
+        item_name: string | null;
+        slot: string | null;
+      }>;
+      meta: {
+        note: string;
+        reviewed_on: string | null;
+        season: string;
+        source_name: string;
+      };
+      mode: GearingMode;
+      pending: boolean;
+      priority_slots: GearingPrioritySlot[];
+      stat_direction: {
+        current: GearingStatLine[];
+        focus: GearingStatFocus[];
+        mode: string;
+        note: string;
+        reviewed_on: string;
+        source_name: string;
+        source_url?: string | null;
+      } | null;
+      summary: {
+        headline: string;
+        subheadline: string;
+      };
+      top_targets: GearingTarget[];
+      weekly_route: Array<{
+        label: string;
+        reason: string;
+        source_name: string;
+        source_type: string;
+      }>;
+    };
+    items: GearItem[];
+    snapshot: {
+      achievements_json: JsonMap | null;
+      captured_at: string;
+      character_id: number;
+      equipped_item_level: number | null;
+      gear_item_count: number;
+      id: number;
+      media_json: JsonMap | null;
+      mythic_json: JsonMap | null;
+      profile_json: JsonMap | null;
+      statistics_json: JsonMap | null;
+    };
+  };
+};
+
 export type GearItem = {
   blizzard_item_id: number | null;
   icon_url: string | null;
@@ -155,6 +251,12 @@ export function getCharacters() {
 export function getCharacter(region: string, realm: string, name: string) {
   return api<CharacterShowResponse>(
     `/api/v1/characters/${region}/${realm}/${name}`,
+  );
+}
+
+export function getCharacterDetail(region: string, realm: string, name: string) {
+  return api<CharacterDetailResponse>(
+    `/api/v1/characters/${region}/${realm}/${name}/detail`,
   );
 }
 

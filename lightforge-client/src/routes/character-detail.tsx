@@ -7,11 +7,7 @@ import {
 import { AppShell } from "../components/layout/AppShell";
 import { Panel } from "../components/ui/Panel";
 import type { GearItem } from "../features/characters/api";
-import {
-  useCharacter,
-  useCharacterGear,
-  useCharacterSnapshot,
-} from "../features/characters/hooks";
+import { useCharacterDetail } from "../features/characters/hooks";
 
 type JsonMap = Record<string, unknown>;
 
@@ -143,6 +139,26 @@ function mediaAssetUrl(mediaJson: JsonMap | null, keys: string[]) {
   return null;
 }
 
+function providerLabel(provider: string | null | undefined) {
+  if (provider === "wowanalyzer") {
+    return "WoWAnalyzer";
+  }
+
+  return provider ?? "Unknown provider";
+}
+
+function severityTone(severity: string | null | undefined) {
+  if (severity === "high") {
+    return "border-[rgba(191,67,56,0.22)] bg-[rgba(255,242,239,0.78)] text-[#8f3d32]";
+  }
+
+  if (severity === "medium") {
+    return "border-[rgba(186,126,50,0.22)] bg-[rgba(255,248,236,0.82)] text-[#8b5f2f]";
+  }
+
+  return "border-[rgba(92,78,66,0.16)] bg-[rgba(255,250,243,0.7)] text-[color:var(--text-soft)]";
+}
+
 function findItemForSlot(items: GearItem[], slot: StageSlot) {
   const validKeys = [slot.key, ...(slot.aliases ?? [])];
 
@@ -228,14 +244,13 @@ export function CharacterDetailPage() {
   const match = useMatch({ from: "/characters/$region/$realm/$name" });
   const { region, realm, name } = match.params;
 
-  const characterQuery = useCharacter(region, realm, name);
-  const snapshotQuery = useCharacterSnapshot(region, realm, name);
-  const gearQuery = useCharacterGear(region, realm, name);
-
-  const character = characterQuery.data?.data.character;
-  const latestSnapshot = characterQuery.data?.data.latest_snapshot;
-  const snapshot = snapshotQuery.data?.data ?? null;
-  const items = gearQuery.data?.data.items ?? [];
+  const detailQuery = useCharacterDetail(region, realm, name);
+  const detail = detailQuery.data?.data;
+  const character = detail?.character;
+  const snapshot = detail?.snapshot ?? null;
+  const items = detail?.items ?? [];
+  const analysis = detail?.analysis ?? null;
+  const gearing = detail?.gearing;
   const renderUrl = mediaAssetUrl(snapshot?.media_json ?? null, [
     "main-raw",
     "main",
@@ -260,7 +275,7 @@ export function CharacterDetailPage() {
           </Link>
         </div>
 
-        {characterQuery.isPending && (
+        {detailQuery.isPending && (
           <Panel className="p-6">
             <p className="text-sm text-[color:var(--text-muted)]">
               Loading forged profile...
@@ -268,7 +283,7 @@ export function CharacterDetailPage() {
           </Panel>
         )}
 
-        {characterQuery.isError && (
+        {detailQuery.isError && (
           <Panel className="p-6">
             <p className="text-sm text-red-700">
               Could not load this character.
@@ -307,14 +322,14 @@ export function CharacterDetailPage() {
                 <article className="forge-stage__meta-card">
                   <p className="forge-section-kicker">Snapshot</p>
                   <p className="mt-3 text-4xl text-[color:var(--text-ink)]">
-                    {latestSnapshot?.equipped_item_level ?? "?"}
+                    {snapshot?.equipped_item_level ?? "?"}
                   </p>
                 </article>
 
                 <article className="forge-stage__meta-card">
                   <p className="forge-section-kicker">Last Sync</p>
                   <p className="mt-3 text-sm leading-7 text-[color:var(--text-soft)]">
-                    {formatTimestamp(latestSnapshot?.captured_at)}
+                    {formatTimestamp(snapshot?.captured_at)}
                   </p>
                   <a
                     href="/character"
@@ -475,7 +490,201 @@ export function CharacterDetailPage() {
               </motion.aside>
             </motion.section>
 
-            {(snapshotQuery.isPending || gearQuery.isPending) && (
+            <div className="grid gap-6 px-8 pb-8 xl:grid-cols-[1.15fr_0.85fr]">
+              <Panel className="p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div className="forge-section-heading">
+                    <p className="forge-section-kicker">Encounter Intelligence</p>
+                    <h2 className="text-3xl text-[color:var(--text-ink)]">
+                      Selected combat signals
+                    </h2>
+                  </div>
+
+                  {analysis && (
+                    <div className="flex flex-wrap gap-2">
+                      <span className="forge-data-chip">
+                        {providerLabel(analysis.provider)}
+                      </span>
+                      {typeof analysis.score === "number" && (
+                        <span className="forge-data-chip">
+                          Score {analysis.score.toFixed(1)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {analysis ? (
+                  <div className="mt-5 grid gap-4">
+                    <div className="forge-quiet-panel border-[rgba(69,223,242,0.22)] bg-[rgba(245,252,253,0.56)]">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="forge-section-kicker">Latest Run</p>
+                          <h3 className="mt-2 text-2xl text-[color:var(--text-ink)]">
+                            {analysis.fight.encounter_name ?? "Encounter unavailable"}
+                          </h3>
+                          <p className="mt-2 text-sm leading-6 text-[color:var(--text-soft)]">
+                            {typeof analysis.summary_json?.headline === "string"
+                              ? analysis.summary_json.headline
+                              : "The latest imported run is available below as a compact action list."}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                          {analysis.fight.kill && (
+                            <span className="forge-data-chip">Kill</span>
+                          )}
+                          {analysis.fight.report_code && (
+                            <span className="forge-data-chip">
+                              Report {analysis.fight.report_code}
+                            </span>
+                          )}
+                          <span className="forge-data-chip">
+                            {formatTimestamp(analysis.started_at)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {analysis.insights.slice(0, 3).map((insight) => (
+                      <article
+                        key={insight.id}
+                        className="rounded-[1.45rem] border border-[rgba(110,73,34,0.14)] bg-[rgba(255,250,243,0.78)] p-5 shadow-[inset_0_1px_0_rgba(255,252,246,0.56)]"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="forge-section-kicker">
+                              {insight.category ?? "Insight"}
+                            </p>
+                            <h3 className="mt-2 text-2xl text-[color:var(--text-ink)]">
+                              {insight.title}
+                            </h3>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${severityTone(insight.severity)}`}
+                            >
+                              {insight.severity ?? "note"}
+                            </span>
+                            {typeof insight.impact_score === "number" && (
+                              <span className="forge-data-chip">
+                                Impact {insight.impact_score.toFixed(1)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {insight.summary && (
+                          <p className="mt-4 text-sm leading-6 text-[color:var(--text-soft)]">
+                            {insight.summary}
+                          </p>
+                        )}
+
+                        {insight.recommendation && (
+                          <div className="forge-quiet-panel mt-4">
+                            <p className="forge-section-kicker">Next adjustment</p>
+                            <p className="mt-2 text-sm leading-6 text-[color:var(--text-soft)]">
+                              {insight.recommendation}
+                            </p>
+                          </div>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="forge-quiet-panel mt-5">
+                    <p className="text-sm leading-6 text-[color:var(--text-soft)]">
+                      No imported WoWAnalyzer-style run is attached to this character yet.
+                      Import a Warcraft Logs analysis run to populate this surface.
+                    </p>
+                  </div>
+                )}
+              </Panel>
+
+              <div className="grid gap-6">
+                <Panel className="p-6">
+                  <div className="forge-section-heading">
+                    <p className="forge-section-kicker">Forge Direction</p>
+                    <h2 className="text-3xl text-[color:var(--text-ink)]">
+                      Narrow upgrade route
+                    </h2>
+                  </div>
+
+                  {gearing && (
+                    <>
+                      <div className="forge-quiet-panel mt-5 border-[rgba(69,223,242,0.22)] bg-[rgba(245,252,253,0.56)]">
+                        <p className="forge-section-kicker">{gearing.meta.source_name}</p>
+                        <h3 className="mt-2 text-2xl text-[color:var(--text-ink)]">
+                          {gearing.summary.headline}
+                        </h3>
+                        <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
+                          {gearing.summary.subheadline}
+                        </p>
+                      </div>
+
+                      <div className="mt-4 grid gap-3">
+                        {gearing.top_targets.slice(0, 3).map((target) => (
+                          <article
+                            key={`${target.slot}-${target.target_name}`}
+                            className="rounded-[1.35rem] border border-[rgba(110,73,34,0.14)] bg-[rgba(255,250,243,0.78)] p-4 shadow-[inset_0_1px_0_rgba(255,252,246,0.56)]"
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="forge-section-kicker">{target.slot}</p>
+                                <h3 className="mt-2 text-lg text-[color:var(--text-ink)]">
+                                  {target.target_name}
+                                </h3>
+                              </div>
+
+                              <span className="forge-data-chip">
+                                {target.source_type}
+                              </span>
+                            </div>
+
+                            <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
+                              {target.reason}
+                            </p>
+                          </article>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </Panel>
+
+                {gearing?.stat_direction && (
+                  <Panel className="p-6">
+                    <div className="forge-section-heading">
+                      <p className="forge-section-kicker">Stat Focus</p>
+                      <h2 className="text-3xl text-[color:var(--text-ink)]">
+                        Current pressure points
+                      </h2>
+                    </div>
+
+                    <div className="mt-5 grid gap-3">
+                      {gearing.stat_direction.focus.map((goal) => (
+                        <div key={goal.label} className="forge-quiet-panel">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="forge-section-kicker">{goal.label}</p>
+                              <p className="mt-2 text-lg text-[color:var(--text-ink)]">
+                                {goal.current_display}
+                              </p>
+                            </div>
+
+                            <span className="forge-data-chip">
+                              Target {goal.target_display}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Panel>
+                )}
+              </div>
+            </div>
+
+            {detailQuery.isPending && (
               <div className="px-8 pb-8">
                 <div className="forge-quiet-panel">
                   <p className="text-sm leading-6 text-[color:var(--text-soft)]">
