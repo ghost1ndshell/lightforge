@@ -463,7 +463,7 @@ a.forge-source-pill:hover {
     letter-spacing: -0.02em;
 }
 
-.forge-progression-badge-high {
+.forge-progression-badge-orange {
     border-color: rgba(180, 83, 9, 0.24);
     background: linear-gradient(
         180deg,
@@ -473,12 +473,29 @@ a.forge-source-pill:hover {
     box-shadow: inset 0 1px 0 rgba(255, 251, 235, 0.82);
 }
 
-.forge-progression-badge-high .forge-progression-badge-label,
-.forge-progression-badge-high .forge-progression-badge-value {
+.forge-progression-badge-orange .forge-progression-badge-label,
+.forge-progression-badge-orange .forge-progression-badge-value {
     color: rgb(120 53 15);
 }
 
-.forge-progression-badge-active {
+.forge-progression-badge-purple {
+    border-color: rgba(126, 34, 206, 0.24);
+    background: linear-gradient(
+        180deg,
+        rgba(216, 180, 254, 0.24),
+        rgba(168, 85, 247, 0.2)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(250, 245, 255, 0.88),
+        0 0 0 2px rgba(168, 85, 247, 0.08);
+}
+
+.forge-progression-badge-purple .forge-progression-badge-label,
+.forge-progression-badge-purple .forge-progression-badge-value {
+    color: rgb(107 33 168);
+}
+
+.forge-progression-badge-blue {
     border-color: rgba(29, 78, 216, 0.22);
     background: linear-gradient(
         180deg,
@@ -490,9 +507,26 @@ a.forge-source-pill:hover {
         0 0 0 2px rgba(59, 130, 246, 0.08);
 }
 
-.forge-progression-badge-active .forge-progression-badge-label,
-.forge-progression-badge-active .forge-progression-badge-value {
+.forge-progression-badge-blue .forge-progression-badge-label,
+.forge-progression-badge-blue .forge-progression-badge-value {
     color: rgb(30 64 175);
+}
+
+.forge-progression-badge-green {
+    border-color: rgba(22, 163, 74, 0.22);
+    background: linear-gradient(
+        180deg,
+        rgba(134, 239, 172, 0.24),
+        rgba(74, 222, 128, 0.2)
+    );
+    box-shadow:
+        inset 0 1px 0 rgba(240, 253, 244, 0.9),
+        0 0 0 2px rgba(34, 197, 94, 0.08);
+}
+
+.forge-progression-badge-green .forge-progression-badge-label,
+.forge-progression-badge-green .forge-progression-badge-value {
+    color: rgb(21 128 61);
 }
 
 .forge-progression-badge-pending {
