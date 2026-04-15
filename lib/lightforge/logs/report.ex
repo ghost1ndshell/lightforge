@@ -21,7 +21,16 @@ defmodule Lightforge.Logs.Report do
 
   def changeset(report, attrs) do
     report
-    |> cast(attrs, [:code, :title, :owner_name, :visibility, :zone_name, :start_time, :end_time, :raw_json])
+    |> cast(attrs, [
+      :code,
+      :title,
+      :owner_name,
+      :visibility,
+      :zone_name,
+      :start_time,
+      :end_time,
+      :raw_json
+    ])
     |> validate_required([:code, :raw_json])
     |> unique_constraint(:code)
   end

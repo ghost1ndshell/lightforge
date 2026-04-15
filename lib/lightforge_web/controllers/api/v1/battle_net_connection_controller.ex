@@ -41,12 +41,19 @@ defmodule LightforgeWeb.Api.V1.BattleNetConnectionController do
   def callback(conn, params) do
     cond do
       params["error"] ->
-        redirect_with_status(conn, :error, "Battle.net login was denied: #{humanize_error(params["error"])}.")
+        redirect_with_status(
+          conn,
+          :error,
+          "Battle.net login was denied: #{humanize_error(params["error"])}."
+        )
 
       params["state"] != BattleNetSession.oauth_state(conn) ->
         conn
         |> BattleNetSession.clear()
-        |> redirect_with_status(:error, "Battle.net login state could not be verified. Try again.")
+        |> redirect_with_status(
+          :error,
+          "Battle.net login state could not be verified. Try again."
+        )
 
       not is_binary(params["code"]) ->
         redirect_with_status(conn, :error, "Battle.net did not return an authorization code.")

@@ -84,7 +84,9 @@ defmodule Lightforge.WarcraftLogs.Client do
   defp extract_report(%{"data" => %{"reportData" => %{"report" => report}}}) when is_map(report),
     do: {:ok, report}
 
-  defp extract_report(%{"data" => %{"reportData" => %{"report" => nil}}}), do: {:error, :not_found}
+  defp extract_report(%{"data" => %{"reportData" => %{"report" => nil}}}),
+    do: {:error, :not_found}
+
   defp extract_report(_body), do: {:error, "Warcraft Logs returned an unexpected report payload."}
 
   defp normalize_token_response({:ok, %{status: 200, body: %{"access_token" => access_token}}})

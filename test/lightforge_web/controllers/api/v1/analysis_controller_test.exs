@@ -173,7 +173,9 @@ defmodule LightforgeWeb.Api.V1.AnalysisControllerTest do
     assert participant_id == participant.id
   end
 
-  test "POST /api/v1/analysis/fights/:fight_id/import rejects participants from another fight", %{conn: conn} do
+  test "POST /api/v1/analysis/fights/:fight_id/import rejects participants from another fight", %{
+    conn: conn
+  } do
     report = Logs.upsert_report(%{code: "jkl012", raw_json: %{}})
 
     fight_one =

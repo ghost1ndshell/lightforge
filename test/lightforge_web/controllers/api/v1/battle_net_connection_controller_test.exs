@@ -37,7 +37,9 @@ defmodule LightforgeWeb.Api.V1.BattleNetConnectionControllerTest do
            } = json_response(conn, 200)
   end
 
-  test "GET /api/v1/me/bnet/status reports connected state when the session has a token", %{conn: conn} do
+  test "GET /api/v1/me/bnet/status reports connected state when the session has a token", %{
+    conn: conn
+  } do
     token_data = %{access_token: "battle-token", expires_at: System.system_time(:second) + 3600}
 
     conn =
@@ -74,7 +76,9 @@ defmodule LightforgeWeb.Api.V1.BattleNetConnectionControllerTest do
     assert get_session(conn, :battle_net_oauth_state)
   end
 
-  test "POST /api/v1/bnet/connect/start returns an error when credentials are missing", %{conn: conn} do
+  test "POST /api/v1/bnet/connect/start returns an error when credentials are missing", %{
+    conn: conn
+  } do
     Application.put_env(:lightforge, Lightforge.BattleNet.Config,
       client_id: "",
       client_secret: "",
@@ -127,7 +131,9 @@ defmodule LightforgeWeb.Api.V1.BattleNetConnectionControllerTest do
     on_exit(fn -> TokenStore.delete(token_id) end)
   end
 
-  test "GET /api/v1/bnet/connect/callback redirects with an error when state is invalid", %{conn: conn} do
+  test "GET /api/v1/bnet/connect/callback redirects with an error when state is invalid", %{
+    conn: conn
+  } do
     conn =
       conn
       |> init_test_session(battle_net_oauth_state: "expected-state")
@@ -154,7 +160,9 @@ defmodule LightforgeWeb.Api.V1.BattleNetConnectionControllerTest do
     assert redirect_url =~ "Battle.net+login+was+denied"
   end
 
-  test "GET /api/v1/bnet/connect/callback redirects with an error when code is missing", %{conn: conn} do
+  test "GET /api/v1/bnet/connect/callback redirects with an error when code is missing", %{
+    conn: conn
+  } do
     conn =
       conn
       |> init_test_session(battle_net_oauth_state: "state-123")

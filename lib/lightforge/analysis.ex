@@ -41,7 +41,9 @@ defmodule Lightforge.Analysis do
     |> Repo.one()
   end
 
-  def get_latest_run_for_fight_and_participant(%Fight{id: fight_id}, %Participant{id: participant_id}) do
+  def get_latest_run_for_fight_and_participant(%Fight{id: fight_id}, %Participant{
+        id: participant_id
+      }) do
     from(run in AnalysisRun,
       where: run.fight_id == ^fight_id and run.participant_id == ^participant_id,
       order_by: [desc: run.inserted_at],
@@ -54,7 +56,11 @@ defmodule Lightforge.Analysis do
   def list_insights_for_run(%AnalysisRun{id: run_id}) do
     from(insight in AnalysisInsight,
       where: insight.analysis_run_id == ^run_id,
-      order_by: [desc: insight.highlighted, desc: insight.impact_score, asc: insight.display_order]
+      order_by: [
+        desc: insight.highlighted,
+        desc: insight.impact_score,
+        asc: insight.display_order
+      ]
     )
     |> Repo.all()
   end
@@ -62,7 +68,11 @@ defmodule Lightforge.Analysis do
   def list_insights_for_fight(%Fight{id: fight_id}) do
     from(insight in AnalysisInsight,
       where: insight.fight_id == ^fight_id,
-      order_by: [desc: insight.highlighted, desc: insight.impact_score, asc: insight.display_order]
+      order_by: [
+        desc: insight.highlighted,
+        desc: insight.impact_score,
+        asc: insight.display_order
+      ]
     )
     |> Repo.all()
   end
@@ -70,7 +80,11 @@ defmodule Lightforge.Analysis do
   def list_insights_for_participant(%Participant{id: participant_id}) do
     from(insight in AnalysisInsight,
       where: insight.participant_id == ^participant_id,
-      order_by: [desc: insight.highlighted, desc: insight.impact_score, asc: insight.display_order]
+      order_by: [
+        desc: insight.highlighted,
+        desc: insight.impact_score,
+        asc: insight.display_order
+      ]
     )
     |> Repo.all()
   end

@@ -22,7 +22,9 @@ defmodule LightforgeWeb.Api.V1.LogReportControllerTest do
     :ok
   end
 
-  test "POST /api/v1/logs/reports/:code/import imports a report with fights and participants", %{conn: conn} do
+  test "POST /api/v1/logs/reports/:code/import imports a report with fights and participants", %{
+    conn: conn
+  } do
     Req.Test.expect(__MODULE__, 2, &warcraft_logs_response/1)
 
     conn = post(conn, "/api/v1/logs/reports/abc123/import")
@@ -63,7 +65,9 @@ defmodule LightforgeWeb.Api.V1.LogReportControllerTest do
            } = json_response(conn, 200)
   end
 
-  test "POST /api/v1/logs/reports/:code/import returns an error when credentials are missing", %{conn: conn} do
+  test "POST /api/v1/logs/reports/:code/import returns an error when credentials are missing", %{
+    conn: conn
+  } do
     Application.put_env(:lightforge, Lightforge.WarcraftLogs.Config,
       client_id: "",
       client_secret: "",
@@ -129,7 +133,7 @@ defmodule LightforgeWeb.Api.V1.LogReportControllerTest do
                     "difficulty" => 5,
                     "kill" => true,
                     "startTime" => 1200,
-                    "endTime" => 225000,
+                    "endTime" => 225_000,
                     "friendlyPlayers" => [11, 12]
                   }
                 ]

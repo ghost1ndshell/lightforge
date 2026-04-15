@@ -35,7 +35,10 @@ defmodule LightforgeWeb.Router do
 
     post "/analysis/fights/:fight_id/import", AnalysisController, :create
     get "/analysis/fights/:fight_id", AnalysisController, :show_fight
-    get "/analysis/fights/:fight_id/participants/:participant_id", AnalysisController, :show_participant
+
+    get "/analysis/fights/:fight_id/participants/:participant_id",
+        AnalysisController,
+        :show_participant
   end
 
   scope "/", LightforgeWeb do

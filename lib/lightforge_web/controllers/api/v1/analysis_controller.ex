@@ -31,8 +31,10 @@ defmodule LightforgeWeb.Api.V1.AnalysisController do
     with {parsed_fight_id, ""} <- Integer.parse(fight_id),
          {parsed_participant_id, ""} <- Integer.parse(participant_id),
          fight when not is_nil(fight) <- find_fight(parsed_fight_id),
-         participant when not is_nil(participant) <- find_participant(fight, parsed_participant_id),
-         run when not is_nil(run) <- Analysis.get_latest_run_for_fight_and_participant(fight, participant) do
+         participant when not is_nil(participant) <-
+           find_participant(fight, parsed_participant_id),
+         run when not is_nil(run) <-
+           Analysis.get_latest_run_for_fight_and_participant(fight, participant) do
       json(conn, %{data: serialize_run(run)})
     else
       :error -> {:error, "Fight or participant id is invalid."}
@@ -57,7 +59,7 @@ defmodule LightforgeWeb.Api.V1.AnalysisController do
   defp serialize_run(run) do
     insights =
       run.insights
-      |> Enum.sort_by(&{not &1.highlighted, -(safe_score(&1.impact_score)), &1.display_order})
+      |> Enum.sort_by(&{not &1.highlighted, -safe_score(&1.impact_score), &1.display_order})
       |> Enum.map(&serialize_insight/1)
 
     %{

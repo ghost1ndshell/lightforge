@@ -34,7 +34,18 @@ defmodule Lightforge.Logs do
     |> Report.changeset(attrs)
     |> Repo.insert!(
       conflict_target: [:code],
-      on_conflict: {:replace, [:title, :owner_name, :visibility, :zone_name, :start_time, :end_time, :raw_json, :updated_at]},
+      on_conflict:
+        {:replace,
+         [
+           :title,
+           :owner_name,
+           :visibility,
+           :zone_name,
+           :start_time,
+           :end_time,
+           :raw_json,
+           :updated_at
+         ]},
       returning: true
     )
   end
@@ -63,7 +74,16 @@ defmodule Lightforge.Logs do
       conflict_target: [:report_id, :warcraftlogs_fight_id],
       on_conflict:
         {:replace,
-         [:encounter_id, :encounter_name, :difficulty, :kill, :start_time_ms, :end_time_ms, :raw_json, :updated_at]},
+         [
+           :encounter_id,
+           :encounter_name,
+           :difficulty,
+           :kill,
+           :start_time_ms,
+           :end_time_ms,
+           :raw_json,
+           :updated_at
+         ]},
       returning: true
     )
   end
@@ -89,7 +109,18 @@ defmodule Lightforge.Logs do
       conflict_target: [:fight_id, :actor_id],
       on_conflict:
         {:replace,
-         [:name, :server_name, :class_name, :spec_name, :role, :item_level, :player, :pet_owner_name, :raw_json, :updated_at]},
+         [
+           :name,
+           :server_name,
+           :class_name,
+           :spec_name,
+           :role,
+           :item_level,
+           :player,
+           :pet_owner_name,
+           :raw_json,
+           :updated_at
+         ]},
       returning: true
     )
   end

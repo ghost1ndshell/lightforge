@@ -40,6 +40,8 @@ defmodule Lightforge.Logs.Fight do
     ])
     |> validate_required([:report_id, :warcraftlogs_fight_id, :raw_json])
     |> assoc_constraint(:report)
-    |> unique_constraint(:warcraftlogs_fight_id, name: :wcl_fights_report_id_warcraftlogs_fight_id_index)
+    |> unique_constraint(:warcraftlogs_fight_id,
+      name: :wcl_fights_report_id_warcraftlogs_fight_id_index
+    )
   end
 end
