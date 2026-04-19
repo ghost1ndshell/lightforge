@@ -58,6 +58,11 @@ defmodule LightforgeWeb.CharacterLiveTest do
 
     html = render(view)
 
+    expected_phase =
+      if Date.compare(Date.utc_today(), ~D[2026-03-17]) == :lt,
+        do: "Midnight pre-season",
+        else: "Midnight Season 1"
+
     assert html =~ "Nolíght"
     assert html =~ "Guild"
     assert html =~ "Ashen Vanguard"
@@ -71,7 +76,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
     assert html =~ "What to chase next"
     assert html =~ "What to do this week"
     assert html =~ "Finish Midnight campaign"
-    assert html =~ "Midnight pre-season"
+    assert html =~ expected_phase
     assert html =~ "Tracked Achievements"
     assert html =~ "Ahead of the Curve"
     assert html =~ "Coming soon"
@@ -79,7 +84,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
     refute has_element?(view, "#character-form")
   end
 
-  test "loads a holy paladin with pre-season Midnight gear targets", %{
+  test "loads a holy paladin with live Season 1 Midnight gear targets", %{
     conn: conn,
     token_id: token_id
   } do
@@ -113,9 +118,9 @@ defmodule LightforgeWeb.CharacterLiveTest do
     assert html =~ "Magister&#39;s Terrace"
     assert html =~ "+10"
     assert html =~ "Method + WingsIsUp"
-    assert html =~ "March 17, 2026"
     assert html =~ "What to chase next"
-    assert html =~ "Secure your Holy Paladin bridge set"
+    assert html =~ "Refine your Holy Paladin Season 1 route"
+    assert html =~ "squished item-level scale"
     assert html =~ "Legendary Item Progression"
     assert html =~ "Tracked Achievements"
     refute has_element?(view, "#character-form")
@@ -145,7 +150,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
         Req.Test.json(conn, %{
           "active_spec" => %{"name" => "Havoc"},
           "character_class" => %{"name" => "Demon Hunter"},
-          "equipped_item_level" => 658,
+          "equipped_item_level" => 268,
           "faction" => %{"name" => "Horde"},
           "gender" => %{"name" => "Male"},
           "guild" => %{"name" => "Ashen Vanguard"},
@@ -161,7 +166,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
             %{
               "inventory_type" => %{"name" => "Sword"},
               "item" => %{"id" => 19019},
-              "level" => %{"value" => 658},
+              "level" => %{"value" => 268},
               "name" => "Thunderfury",
               "quality" => %{"type" => "LEGENDARY"},
               "slot" => %{"name" => "Main Hand", "type" => "MAIN_HAND"}
@@ -169,7 +174,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
             %{
               "inventory_type" => %{"name" => "Trinket"},
               "item" => %{"id" => 193_757},
-              "level" => %{"value" => 652},
+              "level" => %{"value" => 262},
               "name" => "Beacon to the Beyond",
               "quality" => %{"type" => "EPIC"},
               "slot" => %{"name" => "Trinket 1", "type" => "TRINKET_1"}
@@ -262,7 +267,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
         Req.Test.json(conn, %{
           "active_spec" => %{"name" => "Holy"},
           "character_class" => %{"name" => "Paladin"},
-          "equipped_item_level" => 658,
+          "equipped_item_level" => 268,
           "faction" => %{"name" => "Alliance"},
           "gender" => %{"name" => "Male"},
           "guild" => %{"name" => "Silver Hand"},
@@ -278,7 +283,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
             %{
               "inventory_type" => %{"name" => "Hammer"},
               "item" => %{"id" => 101},
-              "level" => %{"value" => 658},
+              "level" => %{"value" => 268},
               "name" => "Arathi Abbot's Gavel",
               "quality" => %{"type" => "EPIC"},
               "slot" => %{"name" => "Main Hand", "type" => "MAIN_HAND"}
@@ -286,7 +291,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
             %{
               "inventory_type" => %{"name" => "Shield"},
               "item" => %{"id" => 102},
-              "level" => %{"value" => 655},
+              "level" => %{"value" => 265},
               "name" => "Everforged Defender",
               "quality" => %{"type" => "EPIC"},
               "slot" => %{"name" => "Off Hand", "type" => "OFF_HAND"}

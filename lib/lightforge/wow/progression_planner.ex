@@ -2,15 +2,19 @@ defmodule Lightforge.Wow.ProgressionPlanner do
   @moduledoc false
 
   @midnight_mythic_plus_dungeons [
-    "Windrunner Spire",
-    "Magister's Terrace",
-    "Murder Row",
-    "Den of Nalorakk",
     "Maisara Caverns",
-    "Blinding Vale",
+    "Magisters' Terrace",
     "Nexus-Point Xenas",
-    "Voidscar Arena"
+    "Windrunner Spire",
+    "Algeth'ar Academy",
+    "Pit of Saron",
+    "Seat of the Triumvirate",
+    "Skyreach"
   ]
+
+  @mythic_plus_aliases %{
+    "Magister's Terrace" => "Magisters' Terrace"
+  }
 
   @midnight_raid_bosses [
     "Imperator Averzian",
@@ -41,7 +45,7 @@ defmodule Lightforge.Wow.ProgressionPlanner do
     dungeon_runs =
       mythic_summary
       |> Map.get(:dungeon_runs, [])
-      |> Map.new(fn dungeon -> {dungeon.name, dungeon.key_level} end)
+      |> Map.new(fn dungeon -> {normalize_dungeon_name(dungeon.name), dungeon.key_level} end)
 
     %{
       badges:
@@ -75,7 +79,15 @@ defmodule Lightforge.Wow.ProgressionPlanner do
   defp mythic_badge_value(key_level) when is_integer(key_level), do: "+#{key_level}"
   defp mythic_badge_value(_key_level), do: "--"
 
-  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 10, do: :high
-  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 2, do: :active
+  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 12, do: :orange
+  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 10, do: :purple
+  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 7, do: :blue
+  defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 2, do: :green
   defp mythic_badge_state(_key_level), do: :pending
+
+  defp normalize_dungeon_name(name) when is_binary(name) do
+    Map.get(@mythic_plus_aliases, name, name)
+  end
+
+  defp normalize_dungeon_name(name), do: name
 end

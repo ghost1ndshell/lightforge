@@ -31,6 +31,10 @@ config :lightforge, Lightforge.BattleNet.Config,
     System.get_env("BATTLENET_REDIRECT_URI") ||
       "http://localhost:#{System.get_env("PORT", "4000")}/auth/bnet/callback"
 
+config :lightforge, Lightforge.WarcraftLogs.Config,
+  client_id: System.get_env("WARCRAFTLOGS_CLIENT_ID", ""),
+  client_secret: System.get_env("WARCRAFTLOGS_CLIENT_SECRET", "")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

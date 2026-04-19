@@ -691,17 +691,31 @@ defmodule LightforgeWeb.CharacterLive do
   defp guild_label(""), do: "No guild"
   defp guild_label(guild), do: guild
 
-  defp progression_badge_classes(:high) do
+  defp progression_badge_classes(:orange) do
     [
       "forge-progression-badge",
-      "forge-progression-badge-high"
+      "forge-progression-badge-orange"
     ]
   end
 
-  defp progression_badge_classes(:active) do
+  defp progression_badge_classes(:purple) do
     [
       "forge-progression-badge",
-      "forge-progression-badge-active"
+      "forge-progression-badge-purple"
+    ]
+  end
+
+  defp progression_badge_classes(:blue) do
+    [
+      "forge-progression-badge",
+      "forge-progression-badge-blue"
+    ]
+  end
+
+  defp progression_badge_classes(:green) do
+    [
+      "forge-progression-badge",
+      "forge-progression-badge-green"
     ]
   end
 
