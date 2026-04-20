@@ -20,9 +20,7 @@ defmodule Lightforge.Wow.ProgressionPlanner do
     dungeon_runs =
       mythic_summary
       |> Map.get(:dungeon_runs, [])
-      |> Map.new(fn dungeon ->
-        {MidnightSeason.normalize_mythic_plus_dungeon(dungeon.name), dungeon.key_level}
-      end)
+      |> Map.new(fn dungeon -> {dungeon.name, dungeon.key_level} end)
 
     %{
       badges:

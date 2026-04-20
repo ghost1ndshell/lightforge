@@ -71,7 +71,7 @@ defmodule Lightforge.Wow.MidnightSeason do
 
   def normalize_mythic_plus_dungeon(name), do: name
 
-  def normalize_mythic_plus_dungeon?(name) do
+  def mythic_plus_dungeon?(name) do
     normalize_mythic_plus_dungeon(name) in @mythic_plus_dungeons
   end
 
