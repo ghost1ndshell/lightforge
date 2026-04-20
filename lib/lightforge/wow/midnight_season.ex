@@ -7,7 +7,7 @@ defmodule Lightforge.Wow.MidnightSeason do
   @parhelion_plaza_open ~D[2026-03-31]
 
   @item_level_cap 289
-  @focused_readiness 268
+  @focused_readiness 275
   @selective_readiness 280
 
   @campaign_target_hint 272
