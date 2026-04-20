@@ -18,6 +18,33 @@ defmodule Lightforge.Wow.MidnightSeason do
   @solid_upgrade_gap 3
   @keystone_master_score 2000.0
 
+  @mythic_plus_dungeons [
+    "Maisara Caverns",
+    "Magisters' Terrace",
+    "Nexus-Point Xenas",
+    "Windrunner Spire",
+    "Algeth'ar Academy",
+    "Pit of Saron",
+    "Seat of the Triumvirate",
+    "Skyreach"
+  ]
+
+  @mythic_plus_aliases %{
+    "Magister's Terrace" => "Magisters' Terrace"
+  }
+
+  @raid_bosses [
+    "Imperator Averzian",
+    "Vorasius",
+    "Fallen-King Salhadaar",
+    "Vaelgor & Ezzorak",
+    "Lightblinded Vanguard",
+    "Crown of the Cosmos",
+    "Chimaerus, the Undreamt God",
+    "Belo'ren, Child of Al'ar",
+    "Midnight Falls"
+  ]
+
   def season_one_start, do: @season_one_start
   def keystone_start, do: @keystone_start
   def darkway_open, do: @darkway_open
@@ -34,6 +61,19 @@ defmodule Lightforge.Wow.MidnightSeason do
   def major_upgrade_gap, do: @major_upgrade_gap
   def solid_upgrade_gap, do: @solid_upgrade_gap
   def keystone_master_score, do: @keystone_master_score
+
+  def mythic_plus_dungeons, do: @mythic_plus_dungeons
+  def raid_bosses, do: @raid_bosses
+
+  def normalize_mythic_plus_dungeon(name) when is_binary(name) do
+    Map.get(@mythic_plus_aliases, name, name)
+  end
+
+  def normalize_mythic_plus_dungeon(name), do: name
+
+  def normalize_mythic_plus_dungeon?(name) do
+    normalize_mythic_plus_dungeon(name) in @mythic_plus_dungeons
+  end
 
   def season_live?(today \\ Date.utc_today()) do
     Date.compare(today, @season_one_start) != :lt
