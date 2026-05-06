@@ -417,10 +417,9 @@ defmodule Lightforge.Wow.CharacterSnapshot do
           best_run && best_run["mythic_level"]
         ]),
       best_dungeon:
-        first_present([
-          best_run && get_in(best_run, ["dungeon", "name"]),
-          best_run && get_in(best_run, ["dungeon", "short_name"])
-        ]),
+        best_run
+        |> dungeon_name_from_run()
+        |> MidnightSeason.normalize_mythic_plus_dungeon(),
       dungeon_runs: normalize_dungeon_runs(best_runs),
       run_count: length(best_runs),
       score:
@@ -437,10 +436,9 @@ defmodule Lightforge.Wow.CharacterSnapshot do
     best_runs
     |> Enum.reduce(%{}, fn run, acc ->
       name =
-        first_present([
-          get_in(run, ["dungeon", "name"]),
-          get_in(run, ["dungeon", "short_name"])
-        ])
+        run
+        |> dungeon_name_from_run()
+        |> MidnightSeason.normalize_mythic_plus_dungeon()
 
       key_level = first_present([run["keystone_level"], run["mythic_level"]])
 
@@ -455,6 +453,15 @@ defmodule Lightforge.Wow.CharacterSnapshot do
   end
 
   defp normalize_dungeon_runs(_best_runs), do: []
+
+  defp dungeon_name_from_run(run) when is_map(run) do
+    first_present([
+      get_in(run, ["dungeon", "name"]),
+      get_in(run, ["dungeon", "short_name"])
+    ])
+  end
+
+  defp dungeon_name_from_run(_run), do: nil
 
   defp normalize_content_summary(mythic_summary, achievement_summary) do
     %{

@@ -1,32 +1,7 @@
 defmodule Lightforge.Wow.ProgressionPlanner do
   @moduledoc false
 
-  @midnight_mythic_plus_dungeons [
-    "Maisara Caverns",
-    "Magisters' Terrace",
-    "Nexus-Point Xenas",
-    "Windrunner Spire",
-    "Algeth'ar Academy",
-    "Pit of Saron",
-    "Seat of the Triumvirate",
-    "Skyreach"
-  ]
-
-  @mythic_plus_aliases %{
-    "Magister's Terrace" => "Magisters' Terrace"
-  }
-
-  @midnight_raid_bosses [
-    "Imperator Averzian",
-    "Vorasius",
-    "Fallen-King Salhadaar",
-    "Vaelgor & Ezzorak",
-    "Lightblinded Vanguard",
-    "Crown of the Cosmos",
-    "Chimaerus, the Undreamt God",
-    "Belo'ren, Child of Al'ar",
-    "Midnight Falls"
-  ]
+  alias Lightforge.Wow.MidnightSeason
 
   def build(attrs) when is_map(attrs) do
     mythic_summary = Map.get(attrs, :mythic_summary) || %{}
@@ -45,11 +20,11 @@ defmodule Lightforge.Wow.ProgressionPlanner do
     dungeon_runs =
       mythic_summary
       |> Map.get(:dungeon_runs, [])
-      |> Map.new(fn dungeon -> {normalize_dungeon_name(dungeon.name), dungeon.key_level} end)
+      |> Map.new(fn dungeon -> {dungeon.name, dungeon.key_level} end)
 
     %{
       badges:
-        Enum.map(@midnight_mythic_plus_dungeons, fn dungeon_name ->
+        Enum.map(MidnightSeason.mythic_plus_dungeons(), fn dungeon_name ->
           %{
             label: dungeon_name,
             state: mythic_badge_state(Map.get(dungeon_runs, dungeon_name)),
@@ -64,7 +39,7 @@ defmodule Lightforge.Wow.ProgressionPlanner do
   defp raid_track do
     %{
       badges:
-        Enum.map(@midnight_raid_bosses, fn boss_name ->
+        Enum.map(MidnightSeason.raid_bosses(), fn boss_name ->
           %{
             label: boss_name,
             state: :pending,
@@ -84,10 +59,4 @@ defmodule Lightforge.Wow.ProgressionPlanner do
   defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 7, do: :blue
   defp mythic_badge_state(key_level) when is_integer(key_level) and key_level >= 2, do: :green
   defp mythic_badge_state(_key_level), do: :pending
-
-  defp normalize_dungeon_name(name) when is_binary(name) do
-    Map.get(@mythic_plus_aliases, name, name)
-  end
-
-  defp normalize_dungeon_name(name), do: name
 end

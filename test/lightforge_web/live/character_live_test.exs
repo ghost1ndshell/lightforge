@@ -115,7 +115,7 @@ defmodule LightforgeWeb.CharacterLiveTest do
     assert html =~ "Guild"
     assert html =~ "Silver Hand"
     assert html =~ "M+"
-    assert html =~ "Magister&#39;s Terrace"
+    assert html =~ "Magisters&#39; Terrace"
     assert html =~ "+10"
     assert html =~ "Method + WingsIsUp"
     assert html =~ "What to chase next"
